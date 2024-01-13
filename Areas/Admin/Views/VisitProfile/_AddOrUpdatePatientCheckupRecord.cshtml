@@ -1,0 +1,379 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<script>
+    var CheckupRecordList = new Array();
+    var TotalItem = 1;
+</script>
+<form id="frmMedicine">
+    <div class="modal fade" id="AddCheckupRecordsModal" tabindex="-1" aria-labelledby="AddCheckupRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    @*<input id="Id" value="@Model.PatientCheckupRecordsOutputDto?.Id" type="hidden" />*@
+                    <input asp-for="PatientCheckupRecordsOutputDto.PatientId" value="@Model.PatientCheckupRecordsOutputDto.PatientId" id="PatientId" type="hidden" />
+                    <h3 id="ModalTitle">Add Checkup Record</h3> 
+                    <div class="mb-3">
+                        <label class="form-label">Date </label>
+                        <input type="text" id="CheckupDate" class="form-control date" value="@Model.PatientCheckupRecordsOutputDto?.CheckupDate" autocomplete="off" placeholder="Date" />
+                        <span class="text-danger"></span>
+                    </div>
+                    @if (@Model.PatientCheckupRecordsOutputDto.PatientCheckupObservationDtos.Count > 0)
+                    {
+                        @foreach (var item in Model.PatientCheckupRecordsOutputDto?.PatientCheckupObservationDtos)
+                        {
+                            <text>
+                                <script>
+                                    CheckupRecordList.push({ "labRepotId": @item.LabReportId, "observation": @item.Observations });
+                                </script>
+                            </text>
+                            <div class="mb-4 mb-lg-5 repeater">
+                                <div data-repeater-list="group-b">
+                                    <div data-repeater-item id="MediItem" class="row align-items-center mb-3 g-3">
+                                        <div class="col-md" id="frmMedicineDetails">
+
+                                            @if (!ViewBag.IsLabReportsEmpty)
+                                            {
+                                                <label class="form-label">Checkup Report </label>
+                                                @Html.DropDownListFor(x => item.LabReportId, Model.PatientCheckupRecordsOutputDto?.LabReportList as IEnumerable<SelectListItem>, "Select Checkup Report",
+                                                 new { @class = "form-control form-select", @Id = "LabReportId", @Name = "LabReportId" })
+
+                                            }
+                                            else
+                                            {
+                                                <label style="color:red">Please Add Checkup Report First !</label>
+                                            }
+                                        </div>
+                                        <div class="col-md">
+                                            <input id="checkupRecoerdId" type="hidden" class="form-control" value="@item.Id" />
+                                            <label class="form-label">Observations </label>
+                                            <input id="observation" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '');"  maxlength="4" class="form-control observation1" value="@item.Observations" placeholder="Add Observations" />
+                                        </div>
+                                        @*<div class="col-md-auto">
+                                            <label class="form-label d-none d-md-block">&nbsp;</label>
+                                            <div>
+                                                <button type="button" class="text-orange" id="AddMedicine"><i class="fas fa-plus-square"></i></button>
+                                                <button type="button" class="text-danger" id="RemoveMedicine"><i class="far fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                    <div id="Menudiv"></div>
+                                    <h6 id="MedicineError" style="color:red; display:none"> Error !</h6>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="mb-4 mb-lg-5 repeater">
+                            <div data-repeater-list="group-b">
+                                <div data-repeater-item id="MediItem" class="row align-items-center mb-3 g-3">
+                                    <div class="col-md" id="frmMedicineDetails">
+                                        @if (!ViewBag.IsLabReportsEmpty)
+                                        {
+                                            <label class="form-label">Checkup Report </label>
+                                            @Html.DropDownListFor(x => x.PatientCheckupRecordsOutputDto.LabReportId, Model.PatientCheckupRecordsOutputDto.LabReportList as IEnumerable<SelectListItem>, "Select Checkup Report",
+                                            new { @class = "form-control form-select", @Id = "LabReportId", @Name = "LabReportId" })
+
+                                        }
+                                        else
+                                        {
+                                            <label style="color:red">Please Add Checkup Report First !</label>
+                                        }
+                                    </div>
+                                    <div class="col-md">
+                                        <label class="form-label">Observations </label>
+                                        <input id="observation" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '');"  maxlength="4" class="form-control observation" value="@Model.PatientCheckupRecordsOutputDto.Observations" placeholder="Add Observations" />
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <label class="form-label d-none d-md-block">&nbsp;</label>
+                                        <div>
+                                            <button type="button" class="text-orange" id="AddMedicine"><i class="fas fa-plus-square"></i></button>
+                                            <button type="button" class="text-danger" id="RemoveMedicine"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="Menudiv"></div>
+                                <h6 id="MedicineError" style="color:red; display:none"> Error !</h6>
+                            </div>
+                        </div>
+                    }
+                    <div class="text-center">
+                        <button type="button" id="btnSave" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<partial name="_ValidationScriptsPartial" />
+<script>
+    var textBoxCount = $(".observation1").length;
+    $('.date').datepicker({ format: 'mm-dd-yyyy' });
+    $("PatientMedicine").on("submit", (event) => { event.preventDefault(); });
+
+    //var list = @Html.Raw(Json.Serialize(ViewBag.MedicineList));
+    if (textBoxCount >= 2) {
+        for (var i = 2; i <= textBoxCount; i++)
+        {
+            $("#LabReportId").prop("id", $("#LabReportId").prop("id") + i);
+            $("#observation").prop("id", $("#observation").prop("id") + i);
+            $("#checkupRecoerdId").prop("id", $("#checkupRecoerdId").prop("id") + i);
+        }
+    }
+    $("#LabReportId").prop("id", $("#LabReportId").prop("id") + TotalItem);
+    $("#observation").prop("id", $("#observation").prop("id") + TotalItem);
+    $("#checkupRecoerdId").prop("id", $("#checkupRecoerdId").prop("id") + TotalItem);
+
+    $(document).on("click", "#btnSave", function () {
+        var Observation = $(document).find("#observation").val();
+        if ($(`#LabReportId${TotalItem}`).val() == "") {
+            $("#MedicineError").html("Please select Report !");
+            $("#MedicineError").css("display", "block");
+            return false;
+        }
+        Save();
+    });
+    //Add Menu
+
+    $(document).off("click", "#AddMedicine");
+    $(document).on("click", "#AddMedicine", function () {
+        insertMenu();
+    });
+        $(`#LabReportId${TotalItem}`).on("change", function () {
+            $(`#LabReportId${TotalItem}   option:selected`).prop("disabled", true);
+        })
+    function insertMenu() {        
+        $("#MedicineError").css("display", "none");
+        var NewMenuId = $(`#LabReportId${TotalItem}   option:selected`).val();
+        var NewMenuName = $(`#LabReportId${TotalItem}  option:selected`).text();
+        var NewDose = $(document).find(`#observation${TotalItem}`).val();
+
+        if (CheckupRecordList != null) {
+            $.each(CheckupRecordList, function (index, value) {
+                if (value.labRepotId == NewMenuId) {
+                    $("#MedicineError").html("Checkup Report already added !");
+                    $("#MedicineError").css("display", "block");
+                    return false;
+                }
+            });
+        }
+        if ((NewDose == "" || NewDose < 0) || !(new RegExp(/^[0-9]\d{0,9}(\.\d{1,3})?%?$/).test(NewDose))) {
+            $("#MedicineError").html("Invalid Observation!");
+            $("#MedicineError").css("display", "block");
+            return false;
+        } else if ($(`#LabReportId${TotalItem}`).val() == "") {
+            $("#MedicineError").html("Please Select Checkup Report!");
+            $("#MedicineError").css("display", "block");
+            return false;
+        }
+        CheckupRecordList.push({ "labRepotId": NewMenuId, "observation": NewDose });
+        Cost = NewDose;
+        TotalItem = TotalItem + 1;
+
+        var element = document.createElement('div');
+        element.className = "upload_form"
+        element.innerHTML = `   <div data-repeater-item class="row align-items-center mb-3 g-3">
+                                <div class="col-md" id="frmMedicineDetails">
+                                    @if (!ViewBag.IsLabReportsEmpty)
+                                        {
+                                    <label class="form-label">Checkup Report </label>
+
+                                        @Html.DropDownListFor(x => x.PatientCheckupRecordsOutputDto.LabReportId, Model.PatientCheckupRecordsOutputDto.LabReportList as IEnumerable<SelectListItem>, "Select Checkup Report",
+                                            new { @class = "form-control form-select", @Id = "LabReportId${TotalItem}", @Name = "LabReportId" })
+                                    }
+                                    else
+                                    {
+                                        <label style="color:red">Please Add Checkup Report First !</label>
+                                    }
+                                </div>
+                                <div class="col-md">
+                                    <label class="form-label">Observations </label>
+                                    <input id="observation${TotalItem}"  oninput="this.value = this.value.replace(/[^0-9]/g, '');"  maxlength="4" type="text" class="observations form-control" placeholder="Add Observations" />
+                                </div>
+                                <div class="col-md-auto">
+                                    <label class="form-label d-none d-md-block">&nbsp;</label>
+                                    <div>
+                                        <button type="button" class="text-orange" id="AddMedicine"><i class="fas fa-plus-square"></i></button>
+                                        <button type="button" class="text-danger" id="RemoveMedicine"><i class="far fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                         `.trim();
+
+        $("#Menudiv").prepend(element);
+        element = "";
+       // $("#LabReportId${TotalItem}").val("");
+        //$(document).find(".InitCost").val("");
+    }
+    //Remove Menu
+    $(document).off("click", "#RemoveMedicine");
+    $(document).on("click", "#RemoveMedicine", function () {
+        //$("#MediItem").empty()
+        var medId = $(this).parent().parent().parent().find("select").attr("id");
+        //var doseId = $(this).parent().parent().parent().find("input[type='text']").attr("id");
+
+        var medVal = $("#" + medId + "  option:selected").val();
+        //var currentMenu = { "Mid": $("#" + medId + "  option:selected").val(), "Dose": $("#"+doseId).val() };
+        CheckupRecordList = jQuery.grep(CheckupRecordList, function (value) {
+
+            return value.Mid != medVal;
+        });
+        $(this).parent().parent().parent().remove(); //$(this).next().find("input[type='text']").attr("data-id").trim().replace("Menu", "");
+    });
+
+    function Save() {
+        
+        var Model = {
+            CheckupDate: "",
+            PatientId: 0,
+            LabReportId:0,
+            PatientCheckupObservationDtos: new Array()
+        };
+        Model.CheckupDate = $("#CheckupDate").val();
+        Model.PatientId = $("#PatientId").val();
+        var textBoxCount1 = $(".observations").length;  
+        if (TotalItem == 1 && textBoxCount == 1) {
+            var CheckupDetail = {
+                LabReportId: "",
+                Observations: "",
+                Id: ""
+            }
+            CheckupDetail.LabReportId = $('#LabReportId1 option:selected').val();
+            Model.LabReportId = $(`#LabReportId1  option:selected`).val();
+            CheckupDetail.Observations = $("#observation1").val();
+            CheckupDetail.Id = $("#checkupRecoerdId1").val();
+            Model.PatientCheckupObservationDtos.push(CheckupDetail);
+
+            $.ajax({
+                url: "/Admin/VisitProfile/_AddOrUpdatePatientCheckupRecord",
+                type: "POST",
+                data: { input: Model },
+                success: function (response) {
+                    $('#AddCheckupRecordsModal').modal('hide');
+                    if (response) {
+                        toastr.success(
+                            '',
+                            'Checkup Records Updated Successfully',
+                            {
+                                timeOut: 20,
+                                fadeOut: 10,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            }
+                        );
+                    }
+                }
+            });
+        }
+        if (TotalItem >= 1 && textBoxCount1 >= 1 || textBoxCount1 == 0 && textBoxCount == 0)
+        {
+            var CheckupDetail = {
+                LabReportId: "",
+                Observations: ""
+            }
+            if (TotalItem == 1 && textBoxCount1 == 0) {
+                CheckupDetail.LabReportId= $('#LabReportId1 option:selected').val();
+                Model.LabReportId = $(`#MedicineId1  option:selected`).val();
+                CheckupDetail.Observations = $("#observation1").val();
+                Model.PatientCheckupObservationDtos.push(CheckupDetail);
+         
+                $.ajax({
+                    url: "/Admin/VisitProfile/_AddOrUpdatePatientCheckupRecord",
+                    type: "POST",
+                    data: { input: Model },
+                    success: function (response) {
+                        $('#AddCheckupRecordsModal').modal('hide');
+                        if (response) {
+                            toastr.success(
+                                '',
+                                'Checkup Records Added Successfully',
+                                {
+                                    timeOut: 20,
+                                    fadeOut: 10,
+                                    onHidden: function () {
+                                        window.location.reload();
+                                    }
+                                }
+                            );
+                        }
+                    }
+                });
+            }
+            else if (textBoxCount1 >= 1) {
+                for (var i = 1; i <= TotalItem; i++) {
+                    var CheckupDetail = {
+                        LabReportId: "",
+                        Observations: ""
+                    }
+                    CheckupDetail.LabReportId = $(`#LabReportId${i} option:selected`).val();            
+                    CheckupDetail.Observations = $("#observation" + i).val();
+                    Model.PatientCheckupObservationDtos.push(CheckupDetail);                  
+                }
+                $.ajax({
+                    url: "/Admin/VisitProfile/_AddOrUpdatePatientCheckupRecord",
+                    type: "POST",
+                    data: { input: Model },
+                    success: function (response) {
+
+                        $('#AddCheckupRecordsModal').modal('hide');
+                        if (response) {
+                            toastr.success(
+                                '',
+                                'Checkup Records Added Successfully',
+                                {
+                                    timeOut: 20,
+                                    fadeOut: 10,
+                                    onHidden: function () {
+                                        window.location.reload();
+                                    }
+                                }
+                            );
+                        }
+                    }
+                });
+            }
+        }
+        else if (textBoxCount >= 2)
+        {
+
+            for (var i = 1; i <= textBoxCount; i++)
+            {
+                var CheckupDetail = {
+                    LabReportId: "",
+                    Observations: "",
+                    Id:""
+                }
+                CheckupDetail.LabReportId = $(`#LabReportId${i} option:selected`).val();
+                Model.LabReportId = $(`#LabReportId${i}  option:selected`).val();
+                CheckupDetail.Observations = $("#observation" + i).val();
+                CheckupDetail.Id = $("#checkupRecoerdId" + i).val();
+                Model.PatientCheckupObservationDtos.push(CheckupDetail);
+            }
+            //sending data
+            $.ajax({
+                url: "/Admin/VisitProfile/_AddOrUpdatePatientCheckupRecord",
+                type: "POST",
+                data: { input: Model },
+                success: function (response) 
+                {
+                    $('#AddCheckupRecordsModal').modal('hide');
+                    if (response) {
+                        toastr.success(
+                            '',
+                            'Checkup Records Updated Successfully',
+                            {
+                                timeOut: 20,
+                                fadeOut: 10,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            }
+                        );
+                    }         
+                }
+            });
+        }     
+    }
+</script>

@@ -1,0 +1,617 @@
+@media only screen and (max-width: 1599px) {
+    html {
+        font-size: 16px;
+    }
+    body .form-control, body .form-select {
+        line-height: 56px;
+    }
+    /*****  Login Page  *****/
+    .login-block .logo {
+        max-width: 250px;
+        margin: 20% auto 35px;
+    }
+    .login-block .left {
+        background-size: 200px auto, 140px auto;
+    }
+    .login-block .login-img {
+        margin-right: -55px;
+        margin-left: -90px;
+    }
+    .login-block .right {
+        padding: 20px 100px;
+    }
+    .description-td {
+        min-width: 400px;
+    }
+    .login-block h1 {
+        font-size: 1.57rem;
+        padding-bottom: 12px;
+        margin-bottom: 38px;
+    }
+    /*****  Login Page  *****/
+
+    /*****  Pre Visit Page  *****/
+    .admin-tabs .nav-link {
+        margin-right: 3rem;
+        font-size: 1.1rem;
+    }
+    /*****  Pre Visit Page Close  *****/
+    header .logo {
+        max-width: 160px;
+    }
+    header {
+        padding: 12px 0;
+    }
+    .admin-sidebar {
+        top: 76px;
+        width: 120px;
+    }
+    .admin-sidebar .nav-link svg {
+        width: 20px;
+    }
+    .has-sidebar main {
+        margin-left: 120px;
+    }
+    main {
+        margin-top: 76px;
+    }
+    .navbar-user .dropdown-menu {
+        font-size: 0.9rem;
+    }
+    .navbar-user .dropdown-item {
+        padding: 14px 20px;
+    }
+
+    .main-title {
+        font-size: 1.35rem;
+    }
+    .search-patient-group .form-control {
+        min-height: 45px;
+        line-height: 42px;
+    }
+    .btn {
+        border-radius: 8px;
+        padding: 0.85rem 1.9rem;
+        font-size: 0.9rem;
+    }
+    .btn-50 {
+        padding: 0.57rem 1.5rem;
+    }
+
+    .patient-block .bordered-img {
+        width: 80px;
+        height: 80px;
+        border-width: 6px;
+    }
+    .patient-block h3 {
+        margin-bottom: 2px;
+    }
+    .patient-details .details-inner {
+        margin-bottom: 0.6rem;
+    }
+}
+
+@media only screen and (max-width: 1399px) {
+    html {
+        font-size: 16px;
+    }
+    /*****  Login Page  *****/
+    .login-block .logo {
+        max-width: 260px;
+        margin: 22% auto 35px;
+    }
+    .login-block .left {
+        background-size: 170px auto, 135px auto;
+    }
+    .login-block .login-img {
+        margin-right: -50px;
+        margin-left: -70px;
+    }
+    .login-block .right {
+        padding: 20px 85px;
+    }
+    /*****  Login Page  *****/
+
+    /*****  Admin Dashboard Page  *****/
+    .admin-sidebar .nav-link svg {
+        width: 25px;
+    }
+    .admin-sidebar {
+        width: 130px;
+        top: 68px;
+    }
+    .has-sidebar main {
+        margin-left: 130px;
+        margin-top: 68px;
+    }
+    header .logo {
+        max-width: 155px;
+    }
+    .avatar {
+        width: 2.6rem;
+        height: 2.6rem;
+    }
+    header {
+        padding: 12px 0;
+    }
+    .search-patient-group .form-control {
+        min-height: 40px;
+        line-height: 36px;
+    }
+    body .form-control, body .form-select {
+        min-height: 50px;
+        line-height: 46px;
+    }
+    .btn {
+        padding: 0.70rem 1.6rem;
+        font-size: 0.95rem;
+    }
+    /*****  Admin Dashboard Page  *****/
+
+    /*****  Pre Visit Page  *****/
+    .admin-tabs .nav-link {
+        margin-right: 3rem;
+        font-size: 1.2rem;
+    }
+    .main-title {
+        font-size: 1.55rem;
+    }
+    .admin-tabs {
+        padding-bottom: 2rem;
+        flex-wrap: nowrap;
+        overflow: auto;
+    }
+    /*****  Pre Visit Page Close  *****/
+
+    /*****  Client Side  *****/
+
+    /*****  Client Side Close  *****/
+}
+
+@media only screen and (max-width: 1199px) {
+    html {
+        font-size: 14px;
+    }
+    header {
+        padding: 10px 0;
+    }
+    header .logo {
+        max-width: 160px;
+    }
+    .admin-sidebar .nav-link svg {
+        width: 25px;
+    }
+    .admin-sidebar {
+        top: 66px;
+        width: 110px;
+    }
+    main {
+        margin-top: 66px;
+    }
+    .has-sidebar main {
+        margin-left: 110px;
+    }
+    /*****  Login Page  *****/
+    .login-block .left {
+        background-size: 150px auto, 100px auto;
+    }
+    .login-block .logo {
+        max-width: 210px;
+        margin: 25% auto 35px;
+    }
+    .login-block .login-img {
+        margin-right: -30px;
+        margin-left: -50px;
+    }
+    .login-block .right {
+        padding: 20px 45px;
+    }
+    .login-block h1 {
+        font-size: 1.5rem;
+        padding-bottom: 12px;
+        margin-bottom: 35px;
+    }
+    .login-cmn-form .form-control {
+        min-height: 45px;
+        line-height: 42px;
+    }
+    /*****  Login Page  *****/
+    /*****  Admin Dashboard Page  *****/
+    .patient-block .bordered-img {
+        width: 70px;
+        height: 70px;
+    }
+    .bordered-img {
+        border-width: 7px;
+    }
+
+    .main-title-wrap {
+        flex-wrap: wrap;
+    }
+    .main-title-wrap.input-groupadded .main-title {
+        flex: 0 0 100%;
+        margin-bottom: 15px;
+    }
+    .main-title-wrap .main-title + .input-group {
+        margin-left: 0;
+    }
+    .table.cstm-table td,
+    .table.cstm-table th {
+        padding: 0.8rem 1.1rem;
+    }
+    /*****  Admin Dashboard Page  *****/
+
+    /*****  Client Detail  *****/
+    .table.cstm-table td,
+    .table.cstm-table th {
+        padding: 0.8rem 1.1rem;
+    }
+    .client-detail-card .bordered-img {
+        width: 140px;
+        height: 140px;
+    }
+    /*****  Client Detail Close  *****/
+}
+
+@media only screen and (max-width: 991px) {
+    .add-body .modal-body {
+        padding: 30px;
+    }
+    .add-body h3 {
+        font-size: 1.45rem;
+        margin-bottom: 1.8rem;
+    }
+    body .form-control,
+    body .form-select {
+        min-height: 45px;
+        padding: 0 15px;
+        line-height: 41px;
+    }
+    /*****  Login Page  *****/
+    .login-main {
+        padding: 20px 50px;
+    }
+    /*****  Login Page  *****/
+    /*****  Admin Dashboard Page  *****/
+    .sidebar-toggle {
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        border-radius: 5px;
+        background-color: #fff;
+        border: 2px solid #f47d2e;
+        text-align: center;
+        display: flex;
+        transition: all 0.5s;
+        margin-left: 0;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    .sidebar-toggle span {
+        position: relative;
+        width: 60%;
+        height: 2px;
+        background-color: #f47d2e;
+        display: inline-block;
+    }
+    .sidebar-toggle span::before,
+    .sidebar-toggle span::after {
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 2px;
+        background-color: #f47d2e;
+        right: 0;
+        transition: all 0.5s;
+    }
+    .sidebar-toggle span::before {
+        top: -7px;
+    }
+    .sidebar-toggle span::after {
+        top: 7px;
+    }
+    .show-sidebar .sidebar-toggle span::before {
+        transform: rotate(45deg);
+        top: 0;
+    }
+    .show-sidebar .sidebar-toggle span::after {
+        transform: rotate(-45deg);
+        top: 0;
+    }
+    .show-sidebar .sidebar-toggle span {
+        height: 0;
+    }
+
+    .admin-sidebar {
+        left: -100%;
+    }
+    .show-sidebar .admin-sidebar {
+        left: 0;
+    }
+    .has-sidebar main {
+        margin-left: 0;
+    }
+    .show-sidebar main {
+        filter: blur(3px);
+    }
+    .admin-tabs .selector {
+        display: none;
+    }
+    .admin-tabs .nav-link.active {
+        color: #f47d2e;
+    }
+    /*****  Admin Dashboard Page  *****/
+
+    /*****  Client Detail Page  *****/
+    #chartdiv {
+        height: 300px;
+    }
+    .record-table thead th,
+    .record-table tbody td {
+        height: 50px;
+    }
+    .chat-block input[type="text"] {
+        padding: 0 20px;
+    }
+    .chat-block .chat-btns {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    /*****  Client Detail Page  *****/
+}
+
+@media only screen and (max-width: 767px) {
+    /*****  Login Page  *****/
+    .login-main {
+        padding: 20px 30px;
+    }
+    .login-block {
+        border-radius: 25px;
+    }
+    .login-block .left {
+        background-size: 95px auto, 60px auto;
+        border-radius: 25px 0 0 25px;
+    }
+    .login-block .logo {
+        max-width: 170px;
+        margin: 23% auto 35px;
+    }
+    .login-block .login-img {
+        margin-right: -20px;
+        margin-left: -30px;
+    }
+    .login-block .right {
+        padding: 15px 35px;
+    }
+    .login-block h1 {
+        font-size: 1.3rem;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+    }
+    .login-block h1::before {
+        height: 2px;
+        width: 80px;
+    }
+    .login-cmn-form .form-control {
+        min-height: 40px;
+        line-height: 36px;
+    }
+    /*****  Login Page  *****/
+
+    /*****  Pre Visit Manager  *****/
+    .card.cstm-card {
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .navbar-user .dropdown-menu .dropdown-item {
+        padding: 12px 15px;
+    }
+    .patient-block {
+        padding: 20px;
+    }
+    .cstm-offcanvas {
+        right: -280px;
+        width: 280px;
+    }
+    .canvas-header {
+        padding: 25px 10px;
+    }
+    .canvas-body {
+        padding: 20px;
+    }
+    body .form-control,
+    body .form-select {
+        border-radius: 5px;
+        min-height: 45px;
+        padding: 0 15px;
+        line-height: 40px;
+    }
+    .search-patient-group .btn-light {
+        border-radius: 5px;
+    }
+    .cstm-offcanvas .offcanvas-btn {
+        border-radius: 15px 0 0 15px;
+        padding: 20px 5px;
+        width: 20px;
+    }
+
+    .add-body .modal-body {
+        padding: 30px 20px;
+    }
+
+    .admin-sidebar {
+        top: 66px;
+    }
+    .add-body h3 {
+        font-size: 1.45rem;
+        margin-bottom: 1.5rem;
+    }
+    /*****  Pre Visit Manager  *****/
+
+    .incrementer .qty {
+        max-width: 40px;
+    }
+    .incrementer [class*="qty-bttn"] {
+        padding: 0 5px;
+        font-size: 1.3rem;
+    }
+
+    .block-table thead {
+        display: none;
+    }
+    body .table.block-table tbody {
+        display: flex;
+        border: none;
+        flex-direction: column;
+    }
+    .block-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        border: none;
+        margin-bottom: 20px;
+        box-shadow: 0px 5px 10px rgba(51, 51, 51, 0.1);
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+    .block-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+    .table.block-table tbody tr td {
+        padding: 5px 10px;
+        position: relative;
+        border: none;
+    }
+    .table.block-table tbody tr td::before {
+        display: block;
+        content: attr(data-title);
+        font-weight: 600;
+        color: #333;
+    }
+    .table.block-table {
+        margin: 0;
+    }
+    .client-detail-card .media h3 {
+        margin-bottom: 0;
+    }
+    .chat-box .inner {
+        border-radius: 10px 10px 0 10px;
+        padding: 1rem;
+    }
+    .block-table tbody tr.table-collapse {
+        margin-top: -16px;
+    }
+    body .table .table-collapse td:first-child {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    /*****  Login Page  *****/
+    .login-block {
+        border-radius: 15px;
+        flex-direction: column;
+        min-height: auto;
+    }
+    .login-block .left {
+        background-size: 95px auto, 60px auto;
+        border-radius: 15px 15px 0 0;
+    }
+    .login-block .logo {
+        max-width: 170px;
+        margin: 18% auto 15px;
+    }
+    .login-block .login-img {
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+    .login-main {
+        padding: 20px;
+    }
+    .login-block .right {
+        padding: 20px;
+    }
+    .back-link {
+        bottom: calc(100% + 30px);
+        left: 40%;
+    }
+    .admin-sidebar {
+        top: 57px;
+    }
+    /*****  Login Page  *****/
+
+    /*****  Admin Dashboard Page  *****/
+    .avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 5px;
+    }
+    header .logo {
+        max-width: 130px;
+    }
+    .sidebar-toggle {
+        width: 32px;
+        height: 32px;
+        margin-right: 10px;
+    }
+    .navbar-user .avatar-wrap span {
+        display: none;
+    }
+    main {
+        margin-top: 57px;
+        padding: 20px;
+    }
+    .search-patient-group {
+        margin-right: 1rem;
+    }
+    .main-title {
+        font-size: 1.6rem;
+    }
+    .title-badge {
+        padding: 4px 10px;
+        border-radius: 5px;
+    }
+    .main-title .title-badge {
+        margin-left: 5px;
+    }
+    .page-link {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        border-radius: 5px;
+    }
+    .pagination .prev-next-link .page-link:first-child {
+        border-radius: 5px 0 0 5px;
+    }
+    .pagination .prev-next-link .page-link:last-child {
+        border-radius: 0 5px 5px 0;
+    }
+    /*****  Admin Dashboard Page  *****/
+
+    /*****  Client Detail Page  *****/
+    .client-detail-card .media {
+        flex-direction: column;
+    }
+    /*****  Client Detail Page  *****/
+}
+
+@media only screen and (max-width: 480px) {
+    .main-title {
+        font-size: 1.3rem;
+    }
+    .admin-tabs .nav-link {
+        margin-right: 1.5rem;
+        font-size: 1rem;
+        padding-bottom: 2px;
+        border-bottom-width: 2px;
+    }
+}
+
+@media only screen and (max-width: 350px) {
+    .cstm-offcanvas {
+        right: -260px;
+        width: 260px;
+    }
+}

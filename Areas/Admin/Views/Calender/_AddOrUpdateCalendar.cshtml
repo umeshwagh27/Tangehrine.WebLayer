@@ -1,0 +1,72 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.CalendarDto;
+
+<form method="post" id="ScheduleForm" asp-action="_AddOrUpdateCalendar" asp-area="Admin" asp-controller="Calender">
+    <!-- Modal -->
+    <div class="modal fade" id="OpenAddScheduleModal" tabindex="-1" aria-labelledby="AddScheduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3>Add Schedule</h3>
+                    <div class="row">
+                        <input asp-for="Id" type="hidden" />
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Date" class="form-label required">Date </label>
+                            <input type="text" asp-for="Date" class="form-control date" id="Date" autocomplete="off" placeholder="Date" />
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StartTime" class="form-label required">Start Time </label>
+                            <input type="text" asp-for="StartTime" class="form-control fromTime" id="StartTime" maxlength="8" placeholder="Start Time" />
+                            <span asp-validation-for="StartTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EndTime" class="form-label required">End Time </label>
+                            <input type="text" asp-for="EndTime" class="form-control toTime" id="EndTime" maxlength="8" placeholder="End Time" />
+                            <span asp-validation-for="EndTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label name="Patient" class="form-label required">Patients </label>
+                            <select asp-for="PatientId" class="form-control form-select" aria-label="Default select example">
+                                <option value="" selected>Select Patient</option>
+                                @foreach (var item in Model.Patients)
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+                                }
+                            </select>
+                                 <span asp-validation-for="PatientId" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label name="Doctors" class="form-label required">Doctors </label>
+                            <select asp-for="DoctorId"  class="form-control form-select" aria-label="Default select example">
+                                <option value="" selected>Select Doctors</option>
+                                @foreach (var item in Model.Doctors)
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+                                }
+                            </select>         
+                            <span asp-validation-for="DoctorId" class="text-danger"></span>
+                        </div>                     
+                     
+                        <div class="col-12 mb-3">
+                            <label asp-for="Remark" class="form-label">Remark </label>
+                            <textarea type="text" class="form-control" id="Remark" asp-for="Remark" placeholder="Type Something" cols="5"></textarea>
+                            <span asp-validation-for="Remark" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+</form>
+
+<script>
+    $("ScheduleForm").on("submit", (event) => { event.preventDefault(); });
+    $('#Date').datepicker({ format: 'mm-dd-yyyy',minDate: new Date()});
+    $('#StartTime').timepicker({ format: 'hh:MM TT' });
+    $('#EndTime').timepicker({ format: 'hh:MM TT' }); 
+</script>

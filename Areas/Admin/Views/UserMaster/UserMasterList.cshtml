@@ -1,0 +1,661 @@
+﻿
+@model Tangehrine.ServiceLayer.Dtos.Admin.UserMasterDto
+@using Microsoft.AspNetCore.Identity
+@using Tangehrine.DataLayer.DbContext
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "User Master data!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<body class="has-sidebar" id="testBody">
+    <main>
+        <div class="card cstm-card">
+            <div class="card-body">
+                <nav>
+                    <div class="nav admin-tabs" id="nav-tab" role="tablist">
+                        <span class="selector"></span>
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForDesignationMaster") == "True") || User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link active" onclick="AddAccessibility()" id="nav-DesignationMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-DesignationMaster" type="button" role="tab" aria-controls="nav-DesignationMaster" aria-selected="true">
+                                <i class="fas fa-stethoscope"></i>Accessibility
+                            </button>
+                        }
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForUserMaster") == "True") || User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-UserMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-UserMaster" type="button" role="tab" aria-controls="nav-UserMaster" aria-selected="false">
+                                <i class="fas fa-user-md"></i>Associates
+                            </button>
+                        }
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForUserAccessMaster") == "True") || User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-UserAccessMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-UserAccessMaster" type="button" role="tab" aria-controls="nav-UserAccessMaster" aria-selected="false">
+                                <i class="fas fa-expand-arrows-alt"></i>User Access
+                            </button>
+                        }
+                        @if(User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-Recovery-tab" data-bs-toggle="tab" data-bs-target="#nav-Recovery" type="button" role="tab" aria-controls="nav-UserAccessMaster" aria-selected="false">
+                                <i class="fas fa-trash-restore-alt"></i>Trash
+                            </button>
+                        }
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForDesignationMaster") == "True") || User.IsInRole("Administrator"))
+                    {
+                        <div class="tab-pane fade show active" id="nav-DesignationMaster" role="tabpanel" aria-labelledby="nav-DesignationMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Accessibility</h1>
+                                <div class="ms-auto">
+                                    <button title="Add Designation" type="button" class="btn btn-primary btn-50" onclick="openAddDesignationPopup()">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Accessibility</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table class="table table-bordered table-striped table-light block-table" id="Accessibility">
+                                    <thead>
+                                        <tr>
+                                            <th>Designation</th>
+                                            <th>Share all Patient Details</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForUserMaster") == "True") || User.IsInRole("Administrator"))
+                    {
+                        <div class="tab-pane fade" id="nav-UserMaster" role="tabpanel" aria-labelledby="nav-UserMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Associates</h1>
+                                <div class="ms-auto">
+                                    <button title="Add User" type="button" class="btn btn-primary btn-50" onclick="openAddUserPopup()">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Associate</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table class="table table-bordered table-striped table-light block-table" id="associate">
+                                    <thead>
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email ID</th>
+                                            <th>Phone</th>
+                                            <th>Designation</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                             
+                                </table>
+                            </div>
+
+                        </div>
+                        
+                    }
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForUserAccessMaster") == "True") || User.IsInRole("Administrator"))
+                    {
+                        <div class="tab-pane fade" id="nav-UserAccessMaster" role="tabpanel" aria-labelledby="nav-UserAccessMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">User Access</h1>
+                                <div class="ms-auto">
+                                    <button title="Add User Access" type="button" class="btn btn-primary btn-50" onclick="openAddUserAccessPopup()">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add User Access</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table  class="table table-bordered table-striped table-light block-table"  id="userAccess">
+                                    <thead>
+                                        <tr>
+                                            <th>More</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Email ID</th>
+                                            <th>Phone</th>
+                                            <th>Designation</th>
+                                            <th class="table-actions">Actions</th>
+                                    
+
+                                        </tr>                                       
+
+                                    </thead>                      
+
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    @if(User.IsInRole("Administrator"))
+                    {
+                        <div class="tab-pane fade" id="nav-Recovery" role="tabpanel" aria-labelledby="nav-Recovery-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Trash</h1>                              
+                            </div>
+                            <div class="table-md-responsive">
+                                <table  class="table table-bordered table-striped table-light block-table"  id="recovery">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr> 
+                                    </thead>  
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Add Designation Modal -->
+        <div class="modal fade" id="AddDesignationModal" tabindex="-1" aria-labelledby="AddDesignationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content add-body">
+
+                    <div class="modal-body">
+                        <h3 id="AddAccessibilityHeading"></h3>
+                        <div class="mb-3">
+                            <label for="" class="form-label required">Designation </label>
+                            <input type="hidden" name="RoleId" id="RoleId" />
+                            <input name="DesignationName" type="text" id="DesignationName" oninput="validationDesignationClear()" maxlength="15" class="form-control" placeholder="Add Designation" />
+                            <span id="validationDesignation" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Share All Patient Details </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" name="ShareAllPatientDetails" id="ShareAllPatientDetails" />
+                                <label class="form-check-label" for="flexCheckChecked">Yes</label>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveDesignation()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-designation" onclick="reset()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Designation Modal -->
+        <!-- Add User Modal -->
+        <div class="modal fade" id="AddUserModal" tabindex="-1" aria-labelledby="AddUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddAssociateHeading"></h3>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Photo </label>
+                                <div class="custom-patientphoto">
+                                    <input type="file" id="ProfileImage" oninput="validationImageClear()" accept="image/*" />
+                                    <label for="ProfileImage" class="patientphoto-block">
+                                        <img id="imgoutput" />
+                                    </label>
+                                    <span id="validationImage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <input type="hidden" name="UserId" id="UserId" />
+                                        <label for="" class="form-label required">First Name </label>
+                                        <input type="text" class="form-control" id="firstName" oninput="validationFirstNameClear()" placeholder="Enter first name" />
+                                        <span id="validationFirstName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label required">Last Name </label>
+                                        <input type="text" class="form-control" id="lastName" oninput="validationLastNameClear()" placeholder="Enter last name" />
+                                        <span id="validationLastName" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label required">Birth Date </label>
+                                        <input type="text" class="form-control" id="birthDate" oninput="validationBirthDateClear()" placeholder="Select date" />
+                                        <span id="validationBirthDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label required">Phone </label>
+                                        <input type="text" class="form-control" id="phoneNumber" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" onclick="validationPhoneNumberClear()" placeholder="Enter phone number" />
+                                        <span id="validationPhoneNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label for="" class="form-label required">Email</label>
+                                        <input type="email" class="form-control" id="email" oninput="validationEmailClear()" placeholder="Enter email address" required />
+                                        <span id="validationEmail" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+
+                                <label for="" class="form-label required">Designation </label>
+                                <select id="designation" name="designation" oninput="validationDesignationAssociateClear()" class="form-select" aria-label="Default select example">
+                                    <option selected value="">Select Designation</option>
+                                    @foreach (var item in Model.designationDtos)
+                                    {
+                                        <option value="@item.Name">@item.Name</option>
+
+                                    }
+
+                                </select>
+                                <span id="validationDesignationAssociate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label for="" class="form-label required">Address </label>
+                                <input type="text" class="form-control" id="address" oninput="validationAddressClear()" placeholder="Enter address" />
+                                <span id="validationAddress" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-12 text-center">
+                                <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+                                <button type="button" class="btn btn-secondary" id="cancel-btn-user" onclick="resetUser()" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add User Modal -->
+        <!-- Add User Access Modal -->
+        <div class="modal fade" id="AddUserAccessModal" tabindex="-1" aria-labelledby="AddUserAccessModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddUserAccessHeading"></h3>
+                        <div class="mb-3">
+                            <label for="" class="form-label required">Select User </label>
+                            <input type="hidden" name="UserAccessId" id="UserAccessId" />
+                            <select id="userId" name="userId" oninput="validationUserIdClear()" class="form-select" aria-label="Default select example">
+                                <option value="0" selected>Select User</option>
+                                @foreach (var item in Model.userDtos)
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+
+                                }
+                            </select>
+                            <span id="validationUserId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Dashboard</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="patientList" id="patientList" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Patient Details</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="patientDetails" id="patientDetails" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Accessibilty</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="designationMaster" id="designationMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Medications</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="medicineMaster" id="medicineMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Labs</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="labReportMaster" id="labReportMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Associates</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="userMaster" id="userMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Relationships</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="relationshipMaster" id="relationshipMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Letter Formats</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="letterFormatMaster" id="letterFormatMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">User Access</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="userAccessMaster" id="userAccessMaster" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Calendar</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="appointmentSchedule" id="appointmentSchedule" /></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-8 col-md-5">Todo List</div>
+                                <div class="col-4 col-md-7"><input class="form-check-input" type="checkbox" value="" name="todoList" id="todoList" /></div>
+                            </div>
+                        </div>
+                        <div class="text-start">
+                            <button type="button" class="btn btn-primary" onclick="saveUserAccess()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-useraccess" onclick="resetUserAccess()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add User Access Modal -->
+    </main>
+</body>
+@section scripts {
+    <script src="~/js/Admin/UserMasterPage.js"></script>
+
+
+    <script>
+        function format(data) {
+            var dashboard=null, pDetail=null, accessibility=null, medications=null, labs=null, associates=null, realationsips=null, latter=null, userAccess=null, appoint=null,todo=null;
+           
+            dashboard = data.isAllowForPatientList ? "Dashboard" : "";
+            pDetail =  data.isAllowForPatientDetails ? "Patient Details" : "";
+            accessibility = data.isAllowForDesignationMaster ? "Accessibility" : "";           
+            medications = data.isAllowForMedicineMaster ? "Medications" : "";
+            labs = data.isAllowForLabReportMaster ? "Labs" : "";
+            associates = data.isAllowForUserMaster ? "Associates":"";
+            realationsips = data.isAllowForRelatioshipMaster ? "Relationships" : "";
+            latter = data.isAllowForLetterFormatMaster ? "Letter Formats" : "";
+            userAccess = data.isAllowForUserAccessMaster ? "User Access" : "";
+            appoint = data.isAllowToAppoint ? "Calendar" : "";                 
+            todo = data.isAllowForTodoList ? "To Do List" : "";
+
+            return ('<table style="border:none;" cellpadding="5" cellspacing="0"  style="padding-left:50px;">' +
+                '<tr>'  + '<td style="border:none">' + dashboard + '</td>' 
+                        + '<td style="border:none">' + pDetail + '</td>'
+                        + '<td style="border:none">' + accessibility + "\n" +'</td>'
+                        + '<td style="border:none">' + medications + '</td>'
+                        + '<td style="border:none">' + labs + '</td>'
+                        + '<td style="border:none">' + associates + '</td>'
+                        + '<td style="border:none">' + associates + '</td>'
+                        + '<td style="border:none">' + realationsips + '</td>'
+                        + '<td style="border:none">' + latter + '</td>'
+                        + '<td style="border:none">' + userAccess + '</td>'
+                        + '<td style="border:none">' + appoint + '</td>' 
+                        + '<td style="border:none" rowspan="12">' + todo + '</td>' +
+
+               '</tr>' +             
+               '</table>');
+       }
+
+        $(document).ready(function () {
+            ViewAccessibility();
+            ViewAssociate();
+            ViewUserAccess();
+            ViewRecoveryItem();
+           $("#birthDate").datepicker({dateFormat: "mm-dd-yyyy"});
+        });
+
+        function ViewUserAccess() {
+                if ($.fn.DataTable.isDataTable("#userAccess")) {
+                    $("#userAccess").dataTable().fnDestroy();
+                }
+                var table = $("#userAccess")
+                    .DataTable({
+                        "responsive": true,
+                        "bProcessing": true,
+                        "bServerSide": true,
+                        "bSearchable": true,
+                        "searching": true,
+                        "autoWidth": false,              
+                        "sAjaxSource": "/Admin/UserMaster/GetUserAccess",
+                        "initComplete": function (settings,  json) { },
+                        "rowCallback": function (row, data, index) { },
+
+                        "order": [[0, "desc"]],
+                        "language": {
+                            "info": "Showing _START_ to _END_ of _TOTAL_ User Access",
+                            "sInfoEmpty": "Showing 0 to 0 of 0   User Acccess"
+                        },
+                        "columns": [
+                            {
+                                "className": "dt-control",
+                                "orderable": false,
+                                "searchable": false,
+                                "data": null,
+                                "defaultContent": ''
+                            },            
+                            {
+                                "data": "firstName",
+                                "searchable": true,
+                                "orderable": true
+                            },
+                            {
+                                "data": "lastName",
+                                "autoWidth": true,
+                                "searchable": true,
+                                "orderable": true,
+                            },
+                            {
+                                "data": "email",
+                                "autoWidth": true,
+                                "searchable": true,
+                                "orderable": true
+                            },
+
+                            {
+                                "data": "phoneNumber",
+                                "autoWidth": true,
+                                "searchable": true,
+                                "orderable": true,
+
+                            },
+                            {
+                                "data": "roleName",
+                                "autoWidth": true,
+                                "searchable": true,
+                                "orderable": true,
+                            },
+                            {
+                                "data": "id",
+                                "width": "2%",
+                                "searchable": false,
+                                "orderable": false,
+                                "render": function (data, type, row) {
+                                    var element = 
+                                         `<a class="action-btn edit editAsset icon_cust_button" title="Edit" onclick="userAccessEdit('${row.id}')"><i class="far fa-edit"></i></a> | <a  class="action-btn delete deleteAsset icon_cust_button" onclick="deleteUserAccess('${row.id}')"><i class="far fa-trash-alt"></i></a>`;
+                                    return element;
+
+                                }
+                            }
+                        ]
+                    });
+                $('#userAccess tbody').on('click', 'td.dt-control', function () {                    
+                    var tr = $(this).closest('tr');
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    }
+                    else {
+                        // Open this row
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                    }
+                });
+            }
+
+        function ViewAccessibility() {
+            if ($.fn.DataTable.isDataTable("#Accessibility")) {
+                $("#Accessibility").dataTable().fnDestroy();
+            }
+            $("#Accessibility")
+
+            .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,              
+                    "sAjaxSource": "/Admin/UserMaster/GetDesignation",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Accessibility",
+                        "sInfoEmpty": "Showing 0 to 0 of 0   Accessibility"
+                    },
+                    "columns": [
+
+                    {
+                        "data": "name",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "shareAllPatientDetails1",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true,
+                    },
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var element =
+
+                                `<button class="action-btn edit" onclick="designationEdit('${row.id}')"><i class="far fa-edit"></i></button> |
+                            <button class="action-btn delete" onclick="deleteDesignation('${row.id}')"><i class="far fa-trash-alt"></i></button>`;
+                        return element;
+
+                        }
+                    }]
+            });
+        }
+        function ViewAssociate() {
+
+            if ($.fn.DataTable.isDataTable("#associate")) {
+                $("#associate").dataTable().fnDestroy();
+            }
+            $("#associate")
+
+                .DataTable({
+
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,              
+                    "sAjaxSource": "/Admin/UserMaster/GetAssociate",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Associate",
+                        "sInfoEmpty": "Showing 0 to 0 of 0   Associate"
+                    },
+                    "columns": [
+
+                        {
+                            "data": "firstName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "lastName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "email",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+
+                        {
+                            "data": "phoneNumber",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true,
+
+                        },
+                        {
+                            "data": "roleName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true,
+                        },
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                var element = 
+
+                           `<button class="action-btn edit" onclick="userEdit('${row.id}')"><i class="far fa-edit"></i></button> |
+                            <button class="action-btn delete" onclick="deleteUser('${row.id}')"><i class="far fa-trash-alt"></i></button>`;
+                                return element;
+
+                            }
+                        }]
+                });
+        }
+        function ViewRecoveryItem() {
+
+            if ($.fn.DataTable.isDataTable("#recovery")) {
+                $("#recovery").dataTable().fnDestroy();
+            }
+            $("#recovery")
+
+                .DataTable({
+
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,              
+                    "sAjaxSource": "/Admin/UserMaster/GetRecoveryItems",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Trash",
+                        "sInfoEmpty": "Showing 0 to 0 of 0  Trash"
+                    },
+                    "columns": [
+
+                        {
+                            "data": "name",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "type",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true,
+                        },                       
+
+                        {
+                            "data": "recoveryId",
+                            "width":"2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                var element = `<button class="action-btn edit" onclick="userRecover('${row.recoveryId}')"><i class="fa fa-recycle"  title="Restore"></i></button> |
+                                <button class="action-btn delete" onclick="trashDelete('${row.recoveryId}')"><i class="far fa-trash-alt"></i></button>`;
+                            return element;
+
+                            }
+                        }]
+                });
+        }
+    </script>
+}
+
+
+
+

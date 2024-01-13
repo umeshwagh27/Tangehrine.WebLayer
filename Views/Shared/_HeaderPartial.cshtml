@@ -1,0 +1,38 @@
+﻿
+@using Microsoft.AspNetCore.Identity
+@using Tangehrine.DataLayer.DbContext
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+
+<header>
+    <div class="container-fluid">
+        <button class="sidebar-toggle"><span></span></button>
+        <a asp-area="Admin" asp-action="Index" asp-controller="Patient" class="logo"><img src="~/assets/images/logo.png" alt="Logo" /></a>
+        <div class="navbar-user">
+            <div class="dropdown">
+                <div class="avatar-wrap dropdown-toggle" type="button" id="avtar-dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="avatar">
+                        <img class="avatar-img rounded-circle" src="~/Profiles/@HttpContextAccessor.HttpContext.Session.GetString("ProfileImageUrl")" alt="..." />
+                    </div>
+                    <span>Hello @HttpContextAccessor.HttpContext.Session.GetString("FirstName")</span>
+                </div>
+                <div aria-labelledby="avtar-dropdown" class="dropdown-menu">
+                    <a href="/Common/Common/Index" class="dropdown-item"><i class="fas fa-user-edit"></i>Edit Profile</a>
+                    <a href="/Identity/Account/Manage/ChangePassword" class="dropdown-item"><i class="fas fa-key"></i>Change Password</a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <ul>
+                            <li>
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt"></i>Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+

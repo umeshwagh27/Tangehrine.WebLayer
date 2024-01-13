@@ -1,0 +1,58 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+
+<form method="post" id="PatientNoteForm" asp-action="_AddOrUpdatePatientNotes" asp-area="Admin" asp-controller="VisitProfile" enctype="multipart/form-data">
+    <!-- Add Lab Reports Modal -->
+    <div class="modal fade" id="AddNoteModal" tabindex="-1" aria-labelledby="AddNoteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle" class="text-center">Add Note</h3>
+
+                    <input asp-for="patientNotesDto.PatientId" type="hidden" />
+                    <input asp-for="patientNotesDto.Id" id="noteId" type="hidden" />
+                   
+                    <div class="mb-3">
+                        <label asp-for="patientNotesDto.Date" class="form-label">Date </label>
+                        <input type="text" asp-for="patientNotesDto.Date" class="form-control date" id="noteDate" placeholder="Date" autocomplete="off" />
+                        <span asp-validation-for="patientNotesDto.Date" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="patientNotesDto.Remark" class="form-label">Remark</label>
+                        <input type="text" asp-for="patientNotesDto.Remark" class="form-control" placeholder="Remark" autocomplete="off" />
+                        <span asp-validation-for="patientNotesDto.Remark" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="PdfFile" class="form-label required">Attachment</label>
+                        <input asp-for="patientNotesDto.NotesFile" id="reportFile" type="file"  accept="application/pdf, image/*" />
+                        <div class="my-dropzone dropzone">
+                            <div class="dz-message">
+                                <img id="imgoutput" src="~/assets/images/file-attachment.png" alt="file-attachment" style="pointer-events: none;" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="patientNotesDto.NotesFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="text-center">
+                        <input id="btnSubmit" type="submit" class="btn btn-primary" value="Save">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Lab Reports Modal -->
+</form>
+
+
+<partial name="_ValidationScriptsPartial" />
+<script >
+    $('#noteDate').datepicker({ format: 'mm-dd-yyyy' });  
+    $("PatientNoteForm").on("submit", (event) => { event.preventDefault(); });
+</script>
+
+
+
+
+
+

@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Tangehrine.DataLayer.DbContext
+@using Microsoft.AspNetCore.Http;
+@model Tangehrine.ServiceLayer.Dtos.Admin.PaginationPatient;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Patient Data!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if ((HttpContextAccessor.HttpContext.Session.GetString("ShareAllPatientDetails") == "True"  && HttpContextAccessor.HttpContext.Session.GetString("IsAllowForPatientList") == "True")||User.IsInRole("Administrator"))
+{
+    <body class="has-sidebar">
+        <main id="main">
+            @*-Total Count-*@
+            <div class="main-title-wrap input-groupadded mb-3 mb-md-4">
+                <h1 class="main-title">Patients<span class="badge bg-light title-badge">@Model.Pager.TotalItems</span></h1>
+
+                @*----Global search-----*@
+                <form class="input-group search-patient-group" asp-area="Admin" asp-action="Index" asp-controller="Patient">
+                    <input type="text" class="form-control" placeholder="" id="GlobalFilter" name="GlobalFilter" value="@ViewBag.GlobalFilter" aria-label="Recipient's username"
+                           aria-describedby="patient-search" />
+                    <button class="btn close-btn btn-50" type="submit" id="patient-search" onclick="ClearSearch()"><i class="fas fa-times"></i></button>
+                    <button class="btn btn-light btn-50" type="submit" id="patient-search"><i class="fas fa-search"></i></button>
+                </form>
+
+                @*----Add Patient button-----*@
+                <div class="ms-auto">
+                    <button title="Add New Patient" type="button" class="btn btn-primary btn-50" data-bs-target="#AddNewPatientModal" onclick="OpenAddEditPopup(0);">
+                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add New Patient</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row g-4">
+                @if (@Model.Pager.TotalItems != 0)
+                {
+
+                    @await Html.PartialAsync("_patientList.cshtml", Model.Patients)
+
+                }
+                else
+                {
+                    <div class="col-sm-6 col-xl-4 col-xxl-3">
+                        <p>No records found</p>
+                    </div>
+                }
+            </div>
+
+            <div class="mt-4">
+                @{
+                    var prevDisabled = Model.Pager.StartPage >= Model.Pager.CurrentPage ? "disabled" : "";
+                    var nextDisabled = Model.Pager.EndPage == Model.Pager.CurrentPage ? "disabled" : "";
+                }
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="prev-next-link">
+
+                            <a class="page-link @prevDisabled" href="@Url.Action("Index", "Patient", new { PageIndex = Model.Pager.CurrentPage - 1 })"><i class="fas fa-chevron-left"></i></a>
+                            <a class="page-link @nextDisabled" href="@Url.Action("Index", "Patient", new { PageIndex = Model.Pager.CurrentPage + 1 })"><i class="fas fa-chevron-right"></i></a>
+
+                        </li>
+                        @for (var i = Model.Pager.StartPage; i <= Model.Pager.EndPage; i++)
+                        {
+                            <li><a class="page-link active" href="@Url.Action("Index", "Patient", new { PageIndex = i })">@i </a></li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+
+        </main>
+    </body>
+
+    <div id="divcontent">
+
+    </div>
+
+    @section scripts {
+        @await Component.InvokeAsync("Notyf")
+
+        <script src="~/js/Admin/GetPatientList.js"></script>
+        <script>
+            function ClearSearch() {
+                $("#GlobalFilter").val('');
+            }
+        </script>
+    }
+
+ }

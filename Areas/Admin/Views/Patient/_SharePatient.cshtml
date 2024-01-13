@@ -1,0 +1,73 @@
+﻿@model List<Tangehrine.ServiceLayer.Dtos.TherapistHelperModel>;
+<!-- Share Patient Modal -->
+<div class="modal fade" id="ShareRecoerd" tabindex="-1" aria-labelledby="ShareRecoerdModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content add-body">
+            <div class="modal-body">
+                <h3 id="ModalTitle">Share Patient </h3>
+                <form id="form">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label required">Name Of Therapist</label>
+
+                            @foreach (var item in Model)
+                            {
+                                @if (item.IsChecked == true)
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <input type="checkbox" class="form-check-input" checked name="checkbox" id="@item.Doctor" value="@item.Doctor" /> <label>@item.DoctorName</label>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6 mb-3">
+                                        <input type="checkbox" class="form-check-input" name="checkbox1" id="@item.Doctor" value="@item.Doctor" /> <label>@item.DoctorName</label>
+                                    </div>
+                                }
+                            }
+
+                            <div class="col-md-12 text-center">
+                                <input type="submit" class="btn btn-primary" id="button" value="Save" />
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+ 
+    <script>
+        $("ShareRecoerd").on("submit", (event) => { event.preventDefault(); });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            var therapistDto = [];
+                $("input[name='checkbox1']").change(function () {
+                    var checked = $(this).val();
+                    if ($(this).is(':checked')) {
+                        therapistDto.push(Doctor=checked);
+                    }
+                });
+                $("input[name='checkbox']").change(function () {
+                    var checked = $(this).val();
+                    if ($(this).not(':checked')) {
+                        therapistDto.push(Doctor = checked);
+                    }
+                });
+               $('#button').on('click', function () {
+                        $.ajax({
+                            url: "/Admin/Patient/AddEditPatientToShare",
+                            type: "POST",
+                            data: { patientId:@ViewBag.Id , doctor: therapistDto },
+                        });
+               });
+        });
+    </script>
+}

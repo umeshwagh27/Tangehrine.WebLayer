@@ -1,0 +1,103 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+
+<form method="post" id="PatientLabReportForm" asp-action="_AddOrUpdatePatientLabReport" asp-area="Admin" asp-controller="VisitProfile" enctype="multipart/form-data">
+    <!-- Add Lab Reports Modal -->
+    <div class="modal fade" id="AddLabReportModal" tabindex="-1" aria-labelledby="AddLabReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle" class="text-center">Add Lab Report</h3>
+
+                    <input asp-for="PatientLabReportDto.PatientId" type="hidden" />
+                    <input asp-for="PatientLabReportDto.Id" id="reportId" type="hidden" />
+
+                    <div class="mb-3">
+                        <label asp-for="PatientLabReportDto.LabReportId" class="form-label required">Report Name </label>
+                        <select id="labReportId" asp-for="PatientLabReportDto.LabReportId" class="form-select" aria-label="Default select example">
+                            <option value="" selected>Select Report</option>
+                            @foreach (var item in Model.LabReportDto)
+                            {
+                                <option value="@item.Id">@item.LabReportName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="PatientLabReportDto.LabReportId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PatientLabReportDto.Date" class="form-label required">Report Date </label>
+                        <input type="text" asp-for="PatientLabReportDto.Date" class="form-control date " id="reportDate" placeholder="Date" autocomplete="off" />
+                        <span asp-validation-for="PatientLabReportDto.Date" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="PdfFile" class="form-label required">Attachment </label>
+                        <input asp-for="PatientLabReportDto.Reportfile" id="reportFile" type="file" placeholder="Report Upload" accept="application/pdf, image/*" />
+                        <div class="my-dropzone dropzone">
+                            <div class="dz-message">
+                                <img id="imgoutput" src="~/assets/images/file-attachment.png" alt="file-attachment" style="pointer-events: none;" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="PatientLabReportDto.Reportfile" class="text-danger"></span>
+                    </div>
+
+                    <div class="text-center">
+                        <input id="btnSubmit" type="submit" class="btn btn-primary" value="Save">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Lab Reports Modal -->
+</form>
+
+
+<partial name="_ValidationScriptsPartial" />
+<script >
+    $('#reportDate').datepicker({ format: 'mm-dd-yyyy' });
+    //// Invoke id of image on change attribute
+    //$("#reportFile").on('change', function () {
+    //    readURL(this, "#imgoutput");
+    //});
+
+    //// Read and check uploaded image validation
+    //function readURL(input, imgControlName) {
+    //    if (input != undefined) {
+    //        var ext = input.files[0].name.substring(input.files[0].name.lastIndexOf('.'))
+    //        if (input.files && input.files[0] && (ext.toLowerCase() == ".png" || ext.toLowerCase() == ".jpeg" || ext.toLowerCase() == ".jpg")) {
+    //            var reader = new FileReader();
+    //            var img = URL.createObjectURL(input.files[0]);
+    //            $(imgControlName).attr('src', img);
+    //            reader.onload = function (e) {
+    //                $(imgControlName).attr('src', e.target.result);
+    //            }
+    //            // reader.readAsDataURL(input.files[0]);
+
+    //        }
+    //        else if (input.files && input.files[0] && (ext.toLowerCase() == ".pdf")) {
+    //            $(imgControlName).attr('src', "Set image path here");
+    //            reader.onload = function (e) {
+    //                $(imgControlName).attr('src', "Set image path here");
+    //            }
+    //            // reader.readAsDataURL(input.files[0]);
+
+    //        }
+    //        else {
+
+    //            toastr.error("Only Images Allowed (.png , .jpeg , .jpg , .pdf)");
+
+
+    //        }
+    //    }
+
+    //}
+
+    $("PatientLabReportForm").on("submit", (event) => { event.preventDefault(); });
+</script>
+
+
+
+
+
+

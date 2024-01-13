@@ -1,0 +1,51 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.MasterDto;
+
+<div class="tab-pane fade" id="nav-LabReportMaster" role="tabpanel" aria-labelledby="nav-LabReportMaster-tab">
+    <div class="main-title-wrap mb-3 mb-md-4">
+        <h1 class="main-title">Labs</h1>
+        <div class="ms-auto">
+            <button title="Add Lab Report" type="button" onclick="AddReport()" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddLabReportModal">
+                <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Lab Report</span>
+            </button>
+        </div>
+    </div>
+    <div class="table-md-responsive">
+        <table class="table table-bordered table-striped table-light block-table">
+            <thead>
+                <tr>
+                    <th>Lab Report</th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.labReportDtos != null && Model.labReportDtos.Count() > 0)
+                {
+                    @foreach (var item in Model.labReportDtos)
+                    {
+                        <tr>
+                            <td data-title="Lab Report">
+                                @item.LabReportName
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn edit" onclick="labReportEdit(@item.Id)"><i class="far fa-edit"></i></button>
+                                    <button class="action-btn delete"><i class="far fa-trash-alt" onclick="labReportDelete(@item.Id)"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            <h3 class="text-center text-danger">
+                                No Records Found
+                            </h3>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

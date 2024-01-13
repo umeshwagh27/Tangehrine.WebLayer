@@ -1,0 +1,528 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.MasterDto
+@using Microsoft.AspNetCore.Identity
+@using Tangehrine.DataLayer.DbContext
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Patient Data!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<body class="has-sidebar" id="testBody">
+
+    <main>
+        <div class="card cstm-card">
+            <div class="card-body">
+                <nav>
+                    <div class="nav admin-tabs" id="nav-tab" role="tablist">
+                        <span class="selector"></span>
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForMedicineMaster") == "True")||User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link active" id="nav-MedicineMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-MedicineMaster" type="button" role="tab" aria-controls="nav-MedicineMaster" aria-selected="true">
+                                <i class="fas fa-pills"></i>Medications
+                            </button>
+                        }
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForLabReportMaster") == "True")||User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-LabReportMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-LabReportMaster" type="button" role="tab" aria-controls="nav-LabReportMaster" aria-selected="false">
+                                <i class="fas fa-file-alt"></i>Labs
+                            </button>
+                        }
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForRelatioshipMaster") == "True")||User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-RelationshipMaster-tab" data-bs-toggle="tab" data-bs-target="#nav-RelationshipMaster" type="button" role="tab" aria-controls="nav-RelationshipMaster" aria-selected="false">
+                                <i class="fas fa-handshake"></i>Relationships
+                            </button>
+                        }
+                        @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForLetterFormatMaster") == "True")||User.IsInRole("Administrator"))
+                        {
+                            <button class="nav-link" id="nav-LetterFormats-tab" data-bs-toggle="tab" data-bs-target="#nav-LetterFormats" type="button" role="tab" aria-controls="nav-LetterFormats" aria-selected="false">
+                                <i class="fas fa-file-pdf"></i>Letter Formats
+                            </button>
+                        }
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForMedicineMaster") == "True")||User.IsInRole("Administrator"))
+                    {
+                        //@await Html.PartialAsync("_ViewMedicine");
+
+                        <div class="tab-pane fade show active" id="nav-MedicineMaster" role="tabpanel" aria-labelledby="nav-MedicineMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Medications</h1>
+                                <div class="ms-auto">
+                                    <button title="Add Medicine" type="button" onclick="AddMedications()" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddMedicineModal">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Medication</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table class="table table-bordered table-striped table-light block-table" id="medicineList">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicines</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    }
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForLabReportMaster") == "True")||User.IsInRole("Administrator"))
+                    {
+                        <div class="tab-pane fade" id="nav-LabReportMaster" role="tabpanel" aria-labelledby="nav-LabReportMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Labs</h1>
+                                <div class="ms-auto">
+                                    <button title="Add Lab Report" type="button" onclick="AddReport()" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddLabReportModal">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Lab Report</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table class="table table-bordered table-striped table-light block-table" id="LabReportList">
+                                    <thead>
+                                        <tr>
+                                            <th>Lab Report</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForRelatioshipMaster") == "True")||User.IsInRole("Administrator"))
+                    {
+                        //@await Html.PartialAsync("_ViewRelatioship");
+                        <div class="tab-pane fade" id="nav-RelationshipMaster" role="tabpanel" aria-labelledby="nav-RelationshipMaster-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Relationships</h1>
+                                <div class="ms-auto">
+                                    <button title="Add Relationship" type="button" onclick="AddRelationships()" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddRelationshipModal">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Relative</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-light" id="RelationShipList">
+                                    <thead>
+                                        <tr>
+                                            <th>Relationship with patient</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                    @if ((HttpContextAccessor.HttpContext.Session.GetString("IsAllowForLetterFormatMaster") == "True") ||User.IsInRole("Administrator"))
+                    {
+                        //@await Html.PartialAsync("_ViewLetterFormat");
+                        <div class="tab-pane fade" id="nav-LetterFormats" role="tabpanel" aria-labelledby="nav-LetterFormats-tab">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h1 class="main-title">Letter Formats</h1>
+                                <div class="ms-auto">
+                                    <button title="Add Letter Format" type="button" class="btn btn-primary btn-50" onclick="openLetterFormatPopup()">
+                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Letter Format</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table class="table table-bordered table-striped table-light block-table" id="LetterFormats">
+                                    <thead>
+                                        <tr>
+                                            <th>Letter Formats</th>
+                                            <th class="table-actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <!-- Add Medicine Modal -->
+        <div class="modal fade" id="AddMedicineModal" tabindex="-1" aria-labelledby="AddMedicineModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddMedicineModalHeading"></h3>
+                        <div class="mb-3">
+                            <label for="" class="form-label required">Medicine </label>
+                            <input type="hidden" name="MedicineId" id="MedicineId" />
+                            <input name="MedicineName" type="text" id="MedicineName" oninput="validationClear()" class="form-control" placeholder="Add Medicine" />
+                            <span id="validationMadicine" class="text-danger"></span>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="myFunction()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-medicine" onclick="cancelMedicine()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Medicine Modal -->
+        <!-- Add lab Report Modal -->
+        <div class="modal fade" id="AddLabReportModal" tabindex="-1" aria-labelledby="AddLabReportModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddLabReportModalHeading"></h3>
+
+                        <div class="mb-3">
+                            <label for="" class="form-label required">Report </label>
+                            <input type="hidden" name="ReportId" id="ReportId" />
+                            <input name="ReportName" type="text" id="ReportName" oninput="validationClear()" class="form-control" placeholder="Add Report" />
+                            <span id="validationLabReport" class="text-danger"></span>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveReport()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-report" onclick="cancelReport()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add lab Report Modal -->
+        <!-- Add Relationship Modal -->
+        <div class="modal fade" id="AddRelationshipModal" tabindex="-1" aria-labelledby="AddRelationshipModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddRelationshipModalHeading"></h3>
+                        <div class="mb-3">
+                            <label for="" class="form-label required">Relationship with Patient </label>
+                            <input type="hidden" name="RelationshipId" id="RelationshipId" />
+                            <input name="RelationshipName" type="text" id="RelationshipName" oninput="validationClear()" class="form-control" placeholder="Add Relationship" />
+                            <span id="validationRelationship" class="text-danger"></span>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveRelationship()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-relationhip" onclick="cancelRelationship()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Relationship Modal -->
+        <!-- Add Letter Format Modal -->
+        <div class="modal fade" id="AddletterFormatModal" tabindex="-1" aria-labelledby="AddletterFormatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+                <div class="modal-content add-body">
+                    <div class="modal-body">
+                        <h3 id="AddletterFormatModalHeading"></h3>
+                           <a class="me-2" data-bs-toggle="collapse" href="#PersonalDetailCollapse" role="button" aria-expanded="true" aria-controls="PersonalDetailCollapse"><i class="fas fa-caret-down"></i> <label class="form-label required">Letter Detail</label> </a>
+                        
+                        <div id="PersonalDetailCollapse">
+                           <div class="row">   
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Date</label>                 
+                                    <input name="date" type="text" id="date" class="form-control" placeholder="Add Date" />
+                               
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Address</label>                        
+                                    <input name="Address" type="text" id="Address"  maxlength="50"  class="form-control" placeholder="Add Address" />
+                              
+                                </div>
+                            </div>
+                             <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Phone1</label>                              
+                                    <input name="Phone1" type="text" id="Phone1" maxlength="20" class="form-control" placeholder="Add Phone1" />
+                             
+                                </div>
+                                 <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Phone2</label>                 
+                                    <input name="Phone2" type="text" id="Phone2"  maxlength="20"  class="form-control" placeholder="Add Phone2" />
+                               
+                                </div>
+                            </div>
+                             <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Website(URL)</label>                        
+                                    <input name="Website" type="text" id="Website"  maxlength="30"   class="form-control" placeholder="Add website url" />
+                             
+                                </div>
+                                 <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Email</label>                 
+                                    <input name="Email" type="text" id="Email"  maxlength="50"  class="form-control" placeholder="Add Email" />
+                                   <span id="validationEmail" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="me-2" data-bs-toggle="collapse" href="#ReciverDetailCollapse" role="button" aria-expanded="true" aria-controls="ReciverDetailCollapse"><i class="fas fa-caret-down"></i>  <label class="form-label required">Sender Detail</label></a>
+                        
+                        <div id="ReciverDetailCollapse">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Full Name</label>                              
+                                    <input name="fullname" type="text" id="fullname"  maxlength="20"  class="form-control" placeholder="Add full name" />
+                                   <span id="validationfullname" class="text-danger"></span>
+                                </div>
+                                 <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Possition</label>                 
+                                    <input name="Possition" type="text" id="Possition"  maxlength="20"  class="form-control" placeholder="Add Possition" />
+                               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Address</label>                              
+                                    <input name="Address2" type="text" id="Address2"  maxlength="50"   class="form-control" placeholder="Add Address" />
+                             
+                                </div>
+                                 <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Email</label>                 
+                                    <input name="Email2" type="text" id="Email2"  maxlength="50" class="form-control" placeholder="Add Email" />                             
+                                    <span id="validationEmail2" class="text-danger"></span>
+                                </div>
+                            </div>
+                                <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Website</label>                              
+                                    <input name="Website2" type="text" id="Website2"  maxlength="30"  class="form-control" placeholder="Add Website" />
+                                </div>
+                                 <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label">Phone</label>                 
+                                    <input name="Phone" type="text" id="Phone"  maxlength="20"  class="form-control" placeholder="Add Phone" />
+                                 </div>
+                            </div>
+                        </div>
+                         <div class="mb-3">
+                            <label for="" class="form-label required">Title</label>
+                            <input type="hidden" name="TitleId" id="TitleId" />
+                            <input name="TitleName" type="text" id="TitleName" oninput="validationClear()" class="form-control" placeholder="Add Title" />
+                            <span id="validationLetter" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <textarea id="summernote" name="summernote"></textarea>                         
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary" onclick="saveLetterFormat()">Save</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-btn-letter" onclick="cancelLetterFormat()" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Letter Format Modal -->
+
+    </main>
+    <div id="letterFormatPublish" style="display:none">
+        <div id="letterContent" style="padding:0px !important">
+        </div>
+    </div>
+</body>
+
+
+@section scripts {
+    <script src="~/js/Admin/MasterPage.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {       
+            $('#date').datepicker({ format: 'mm-dd-yyyy' });
+            ViewMedicine();
+            ViewLabReport();
+            ViewRelationShip();
+            ViewLetterFormats();
+        });
+
+        function ViewMedicine() {
+            if ($.fn.DataTable.isDataTable("#medicineList")) {
+                $("#medicineList").dataTable().fnDestroy();
+            }
+            $("#medicineList")
+                .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,                
+                    "autoWidth": false,                   
+                    "sAjaxSource": "/Admin/Master/GetMedicine",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+                  
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Medications",
+                        "sInfoEmpty": "Showing 0 to 0 of 0 Medications"
+                    },
+                    "columns": [
+                        {
+                            "data": "medicineName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+                                var element = `<a onclick="myEdit('${row.id}');" class="action-btn edit editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="deleteMedicine('${row.id}');" class="action-btn delete deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`
+                                 return element;
+                            }
+                        }
+                    ]
+                });
+        }
+
+        function ViewLabReport() {
+            if ($.fn.DataTable.isDataTable("#LabReportList")) {
+                $("#LabReportList").dataTable().fnDestroy();
+            }
+            $("#LabReportList")
+                .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,
+                    
+                    "sAjaxSource": "/Admin/Master/GetLabReport",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+                    //"fnDrawCallback": function (oSettings) {
+                    //    if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay()) {
+                    //        $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                    //        $("#medicineList_info").hide();
+                    //    } else {
+                    //        $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                    //        $("#medicineList_info").show();
+                    //    }
+                    //},
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Lab Report",
+                        "sInfoEmpty": "Showing 0 to 0 of 0 Lab Report"
+                    },
+                    "columns": [
+                        {
+                            "data": "labReportName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+
+                                var element = `<a onclick="labReportEdit('${row.id}');" class="action-btn edit editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="labReportDelete('${row.id}');" class="action-btn delete deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`;
+                                return element;
+                            }
+                        }
+                    ]
+                });
+        }
+
+        function ViewRelationShip() {
+            if ($.fn.DataTable.isDataTable("#RelationShipList")) {
+                $("#RelationShipList").dataTable().fnDestroy();
+            }
+            $("#RelationShipList")
+                .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,
+                    "sAjaxSource": "/Admin/Master/GetRelationShip",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+                   
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Relationship",
+                        "sInfoEmpty": "Showing 0 to 0 of 0 Relationship"
+                    },
+                    "columns": [
+                        {
+                            "data": "relationshipName",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "width": "2%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+
+                                var element = `<a onclick="relationshipEdit('${row.id}');" class="action-btn edit editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="relationshipDelete('${row.id}');" class="action-btn delete deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`;
+                                return element;
+                            }
+                        }
+                    ]
+                });
+        }
+
+        function ViewLetterFormats() {
+            if ($.fn.DataTable.isDataTable("#LetterFormats")) {
+                $("#LetterFormats").dataTable().fnDestroy();
+            }
+            $("#LetterFormats")
+                .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,
+                    "sAjaxSource": "/Admin/Master/GetLetterFormats",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+                    //"fnDrawCallback": function (oSettings) {
+                    //    if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay()) {
+                    //        $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                    //        $("#medicineList_info").hide();
+                    //    } else {
+                    //        $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                    //        $("#medicineList_info").show();
+                    //    }
+                    //},
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Letter Formats",
+                        "sInfoEmpty": "Showing 0 to 0 of 0 Letter Formats"
+                    },
+                    "columns": [
+                        {
+                            "data": "letterFormatTitle",
+                            "autoWidth" : true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "width": "12%",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+
+                                var element = `<div class="action-button">
+                                            <button class="action-btn edit" onclick="letterFormatEdit('${row.id}')"><i class="far fa-edit"></i></button> |
+                                            <button class="action-btn delete" onclick="letterFormatDelete('${row.id}')"><i class="far fa-trash-alt"></i></button> |
+                                            <button class="action-btn share" onclick="showLetterFormat('${row.id}')"><i class="far fa-eye"></i></button> |
+                                            <button class="action-btn download" onclick="printToPDF('${row.id}')"><i class="far fa-arrow-alt-circle-down"></i></button>
+                                            </div>`;
+                                return element;
+                            }
+                        }
+                    ]
+                });
+        }
+
+    </script>
+}

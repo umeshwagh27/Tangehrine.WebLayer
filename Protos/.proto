@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <link type="image/x-icon" rel="shortcut icon" href="/assets/images/favicon.png" />
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link type="text/css" rel="stylesheet" href="/assets/css/all.min.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/css/styles.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/css/responsive.css" />
+</head>
+<body>
+
+    
+<div class="login-main">
+    <div class="container">
+        <div class="login-block">
+            <div class="left">
+                <div class="logo"><img src="/assets/images/logo.png" alt="Logo" /></div>
+                <div class="login-img"><img src="/assets/images/login-inner.png" class="login-inner" /></div>
+            </div>
+            <div class="right">
+                <h1>Welcome Back!</h1>
+                <div class="text-danger validation-summary-valid" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+                <form id="account" method="post" class="login-cmn-form">
+                    <div class="mb-3 mb-md-4">
+                        <input class="form-control" placeholder="Enter Email" type="email" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Input_Email" name="Input.Email" value="" />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Input.Email" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="mb-3 mb-md-4">
+                        <input class="form-control" placeholder="Enter Password" type="password" data-val="true" data-val-required="The Password field is required." id="Input_Password" name="Input.Password" />
+                        <span class="text-danger field-validation-valid" data-valmsg-for="Input.Password" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="row align-items-center justify-content-between">
+                        <div class="mb-3 mb-md-4 col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" data-val="true" data-val-required="The Remember me? field is required." id="Input_RememberMe" name="Input.RememberMe" value="true" />
+                                <label class="form-check-label" for="remember-password">Keep me logged in</label>
+                            </div>
+                        </div>
+                        <div class="mb-3 mb-md-4 col-auto form-check">
+                            <a class="forgot-link" id="forgot-password" href="/Identity/Account/ForgotPassword">Forgot Password</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-50">Log in</button>
+                <input name="__RequestVerificationToken" type="hidden" value="CfDJ8Jcd-KqgSflPu4Pth2PPHt8pU49N71OZmBDAV9fYiaJxTVy-HTzX9ffnR77zXLtfXvwbiASvt0ExPTkQwFbklccGaOFY_ry_Gcniky5DCeGiJEFQh4dmOlRmavF-TJDDy2qn3KS-JNaiSLoDwHmAols" /><input name="Input.RememberMe" type="hidden" value="false" /></form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/custom.js"></script>
+
+    
+
+    
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js" crossorigin="anonymous" integrity="sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o+ok+t/SAKlL5mvXLr0OXNi1Hp">
+    </script>
+<script>(window.jQuery && window.jQuery.validator||document.write("\u003Cscript src=\u0022/Identity/lib/jquery-validation/dist/jquery.validate.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-rZfj/ogBloos6wzLGpPkkOr/gpkBNLZ6b6yLy4o\u002Bok\u002Bt/SAKlL5mvXLr0OXNi1Hp\u0022\u003E\u003C/script\u003E"));</script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.9/jquery.validate.unobtrusive.min.js" crossorigin="anonymous" integrity="sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds">
+    </script>
+<script>(window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive||document.write("\u003Cscript src=\u0022/Identity/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js\u0022 crossorigin=\u0022anonymous\u0022 integrity=\u0022sha384-ifv0TYDWxBHzvAk2Z0n8R434FL1Rlv/Av18DXE43N/1rvHyOG4izKst0f2iSLdds\u0022\u003E\u003C/script\u003E"));</script>
+
+
+
+
+</body>
+</html>

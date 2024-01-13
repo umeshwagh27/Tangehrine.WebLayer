@@ -1,0 +1,37 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+<!-- Add StatementTrends Modal -->
+<form method="post" id="PreStatementTrends" asp-action="_AddOrEditPatientStatementTrends" asp-area="Admin" asp-controller="VisitProfile">
+    @Html.AntiForgeryToken()
+    <div class="modal fade" id="AddNewPreStatementTrendsModal" tabindex="-1" aria-labelledby="AddNewRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle">Add Statement</h3>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <input asp-for="PatientStatementTrendsDto.PatientId" type="hidden" />
+                        <input asp-for="PatientStatementTrendsDto.Id" type="hidden" />
+                        <input asp-for="PatientStatementTrendsDto.Count" type="hidden" />
+                        <div class="col-12 mb-3">
+                            <label asp-for="PatientStatementTrendsDto.Statement" for="AddEditPreVisitNoteDto.Remark" class="form-label">Statements </label>
+                            <textarea class="form-control" asp-for="PatientStatementTrendsDto.Statement" placeholder="Type Something..." required></textarea>
+                            <span asp-validation-for="PatientStatementTrendsDto.Statement" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Pre Visit Note Modal -->
+</form>
+
+
+<partial name="_ValidationScriptsPartial" />
+<script>
+    $("PreStatementTrends").on("submit", (event) => { event.preventDefault(); });
+</script>
+

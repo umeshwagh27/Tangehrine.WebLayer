@@ -1,0 +1,133 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientMasterDto;
+<!-- Add patient Modal -->
+<div class="modal fade" id="AddNewPatientModal" tabindex="-1" aria-labelledby="AddNewPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+        <div class="modal-content add-body">
+            <div class="modal-body">
+                <h3 id="ModalTitle">Add new Patient</h3>
+                <form method="post" asp-action="_AddOrEditPatient" asp-area="Admin" asp-controller="Patient" enctype="multipart/form-data">
+             
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 mb-3">
+                            <label asp-for="patientDto.PatientPhoto" class="form-label">Patient Photo </label>
+                            <div class="custom-patientphoto">
+                                <input asp-for="patientDto.PatientPhoto" type="file" id="ProfileImage" accept="image/*" />
+                                <label for="ProfileImage" class="patientphoto-block">
+                                    @if (@Model.patientDto.PatientPhotoUrl != null)
+                                    {
+                                        <img id="imgoutput" src="~/PatientImages/@Model.patientDto.PatientPhotoUrl" />
+                                    }
+                                    else
+                                    {
+                                        <img id="imgoutput" src="~/assets/images/avatar-3.png" alt="avatar" />
+                                    }
+
+                                </label>
+                                <span asp-validation-for="patientDto.PatientPhoto" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-md-8">
+                            <div class="row">
+                                <div class="col-xl-4 col-lg-8 col-md-8 mb-3">
+                                    <input asp-for="patientDto.Id" type="hidden" />
+                                    <label asp-for="patientDto.FirstName" class="form-label required">First Name </label>
+                                    <input asp-for="patientDto.FirstName" class="form-control" id="" placeholder="First name" />
+                                    <span asp-validation-for="patientDto.FirstName" class="text-danger"></span>
+                                </div>
+                                  <div class="col-xl-2 col-lg-4 col-md-4 mb-3">
+                                    <label asp-for="patientDto.MI" class="form-label">M.I</label>
+                                    <input asp-for="patientDto.MI" class="form-control" id="" placeholder="M.I" />
+                                    <span asp-validation-for="patientDto.MI" class="text-danger"></span>
+                                </div>
+                                <div class="col-xl-4 col-lg-8 col-md-8 mb-3">
+                                    <label asp-for="patientDto.LastName" class="form-label required">Last Name </label>
+                                    <input asp-for="patientDto.LastName"  class="form-control" id="" placeholder="Last name" />
+                                    <span asp-validation-for="patientDto.LastName" class="text-danger"></span>
+                                </div>
+                                 <div class="col-xl-2 col-lg-4 col-md-4 mb-3">
+                                    <label asp-for="patientDto.Suffix" class="form-label">Suffix</label>
+                                    <input asp-for="patientDto.Suffix"  class="form-control" id="" placeholder="Suffix" />
+                                    <span asp-validation-for="patientDto.Suffix" class="text-danger"></span>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-3">
+                                    <label asp-for="patientDto.BirthDateString" class="form-label required">Birth Date </label>
+                                    <input asp-for="patientDto.BirthDateString" class="form-control" type="text" id="birthday" placeholder="Birth date" autocomplete="off" />
+                                    <span asp-validation-for="patientDto.BirthDateString" class="text-danger"></span>
+                                </div>
+                                <div class="col-xl-4 col-lg-6 col-md-6 mb-3">
+                                    <label asp-for="patientDto.Mobile" class="form-label required">Mobile</label>
+                                    <input asp-for="patientDto.Mobile"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" class="form-control" id="" placeholder="Mobile" />
+                                    <span asp-validation-for="patientDto.Mobile" class="text-danger"></span>
+
+                                </div>
+                                 <div class="col-xl-4 col-lg-6 col-md-6 mb-3">
+                                    <label asp-for="patientDto.Mobile2" class="form-label">Phone</label>
+                                    <input asp-for="patientDto.Mobile2"  oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" class="form-control" id="" placeholder="Home" />
+                                    <span asp-validation-for="patientDto.Mobile2" class="text-danger"></span>
+
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-6 mb-3">
+                                    <label asp-for="patientDto.Email" class="form-label required">Email </label>
+                                    <input asp-for="patientDto.Email" class="form-control" id="" placeholder="Enter your email" />
+                                    <span asp-validation-for="patientDto.Email" class="text-danger"></span>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-6 mb-3">
+                                    <label asp-for="patientDto.Address" class="form-label required">Address </label>
+                                    <input asp-for="patientDto.Address" class="form-control" id="" placeholder="Enter your address" />
+                                    <span asp-validation-for="patientDto.Address" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <center><b>Emergency Contact</b></center>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                            <label asp-for="patientDto.RelativeFirstName" class="form-label">First Name </label>
+                            <input asp-for="patientDto.RelativeFirstName" class="form-control" id="" placeholder="First name" />
+                            <span asp-validation-for="patientDto.RelativeFirstName" class="text-danger"></span>
+                        </div>
+                          <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                            <label asp-for="patientDto.RelativeLastName" class="form-label">Last Name </label>
+                            <input asp-for="patientDto.RelativeLastName" class="form-control" id="" placeholder="Last name" />
+                            <span asp-validation-for="patientDto.RelativeLastName" class="text-danger"></span>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                            <label  class="form-label">Relationship</label>
+                            <select asp-for="patientDto.RelationShip"  class="form-select" aria-label="Default select example">
+                                <option value="0" selected>Open this menu</option>
+                                @foreach (var item in Model.relationshipDtos)
+                                {
+                                    <option value="@item.Id">@item.RelationshipName</option>
+                                }
+                            </select>
+                            <span asp-validation-for="patientDto.RelationShip" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-12 mb-3">
+                            <label asp-for="patientDto.RelativePhoneNo" class="form-label">Phone </label>
+                            <input asp-for="patientDto.RelativePhoneNo" class="form-control" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" placeholder="Relative's phone no" />
+                            <span asp-validation-for="patientDto.RelativePhoneNo" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 text-center">
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script> 
+        $("AddNewPatientModal").on("submit", (event) => { event.preventDefault(); });   
+        $(document).ready(function () {
+            $('#birthday').datepicker({ format: 'mm-dd-yyyy' });
+        });
+    </script>
+
+}

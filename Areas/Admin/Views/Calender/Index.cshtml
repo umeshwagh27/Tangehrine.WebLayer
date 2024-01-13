@@ -1,0 +1,358 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.CalendarDto;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Schedule!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body class="has-sidebar">
+    <main>
+        <div class="card cstm-card">
+            <div class="card-body">
+                <div class="main-title-wrap mb-3 mb-md-4">
+                    <h1 class="main-title">Calendar</h1>
+                    <div class="ms-auto">
+                        <button title="Add Schedule" type="button" class="btn btn-primary btn-50" onclick="OpenAddEditSchedulePopup()" data-bs-target="#AddScheduleModal">
+                            <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Schedule</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="calender-wrap cstm-calender-wrap" id="calender"></div>
+        
+            </div>
+        </div>
+        <div id="divScheduleContent">
+
+            <div class="modal fade" id="AddScheduleModal" tabindex="-1" aria-labelledby="AddScheduleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                    <div class="modal-content add-body">
+                        <div class="modal-body">
+                            <h3>Add Schedule</h3>
+                            <div class="row">
+                                <input asp-for="Id" id="calenderid" type="hidden" />
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="Date" class="form-label required">Date </label>
+                                    <input type="text" asp-for="Date" class="form-control date" id="date" autocomplete="off" placeholder="Date" />
+                                    <span asp-validation-for="Date" id="vldDate" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="StartTime" class="form-label required">Start Time </label>
+                                    <input type="text" asp-for="StartTime" class="form-control fromTime" id="startTime" maxlength="8" placeholder="Start Time" />
+                                    <span asp-validation-for="StartTime"  id="vldStartTime" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="EndTime" class="form-label required">End Time </label>
+                                    <input type="text" asp-for="EndTime" class="form-control toTime" id="endTime" maxlength="8" placeholder="End Time" />
+                                    <span asp-validation-for="EndTime"  id="vldEndTime" class="text-danger"></span>
+                                </div>                             
+                                
+                                <div class="col-12 mb-3">
+                                    <label name="Patient" class="form-label required">Patients </label>
+                                    <select  id="PatientId" asp-for="PatientId" class="form-control form-select" aria-label="Default select example">
+                                        <option value="" selected>Select Patient</option>
+                                        @foreach (var item in Model.Patients)
+                                        {
+                                            <option value="@item.Id">@item.FullName</option>
+                                        }
+                                    </select>                          
+                                     <span asp-validation-for="PatientId" id="vldPatientId" class="text-danger"></span>
+                                </div>
+                              
+                                <div class="col-12 mb-3">
+                                     <label name="Doctor" class="form-label required">Doctor </label>
+                                    <select asp-for="DoctorId" id="DoctorId" class="form-control form-select" aria-label="Default select example">
+                                        <option value="" selected>Select Doctors</option>
+                                        @foreach (var item in Model.Doctors)
+                                        {
+                                            <option value="@item.Id">@item.FullName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="DoctorId"  id="vldDoctorId" class="text-danger"></span>
+                                </div>                                                         
+                             
+                                <div class="col-12 mb-3">
+                                    <label asp-for="Remark" class="form-label">Remark </label>
+                                    <textarea type="text" class="form-control" id="remark" asp-for="Remark" placeholder="Type Something" cols="5"></textarea>
+                                    <span asp-validation-for="Remark" class="text-danger"></span>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-primary" onclick="SaveEvent()">Save</button>
+                                    <button type="button" class="btn btn-secondary"  onclick="Cancel()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+         <div id="divScheduleContentModel">
+        </div>
+
+        
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content">      
+                         <div class="modal-header">
+                              <h3 class="mb-0 fs-5"><span id="eventTitle"></span></h3>
+                              <button type="button" class="close" data-bs-dismiss="modal">&times;</button>                              
+                        </div>
+                        <div class="modal-body">
+                           
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                   <p id="pDetails"></p>
+                                </div>
+                                 <div class="col-12 text-center">                                   
+                                      <button  type="button" onclick="AddEditSchedulePopup()" class="btn btn-primary" > Edit</button>
+                                      <button  type="button" onclick="DeleteCalender()" class="btn btn-secondary">Remove</button>                       
+                                 </div>
+                            </div>                        
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </main>
+
+
+</body>
+<link href="~/assets/fullcalendar/css/fullcalender.min.css" rel="stylesheet" />
+<link href="~/assets/fullcalendar/css/fullcalendar.print.css" rel="print" />
+<link href="~/assets/fullcalendar/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+@section Scripts { 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+   <script type="text/javascript" src="~/assets/fullcalendar/js/bootstrap-datetimepicker.min.js"></script>  
+   <script type="text/javascript" src="~/assets/fullcalendar/js/fullcalendar.min.js"></script>
+    @await Component.InvokeAsync("Notyf")
+    <script>
+        $(document).ready(function () {
+            FetchEventAndRenderCalendar();           
+        })        
+        var events = [];
+        var selectedEvent = null;
+        function FetchEventAndRenderCalendar() {
+            events = [];
+            $.ajax({
+                type: "GET",
+                url: "/Admin/Calender/GetCalender",
+                success: function (data) {                    
+                    $.each(data, function (i, v) {
+                        events.push({
+                            id: v.id,
+                            title: v.title,
+                            start: moment(v.start),
+                            end: moment(v.end),
+                            color: v.themeColor,
+                            description: v.remark,
+                            allDay: false
+                        });
+                    })                   
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    alert('failed');
+                }
+            })
+        }
+
+        function GenerateCalender(events) {            
+            $('#calender').fullCalendar('destroy');
+            $('#calender').fullCalendar({
+                contentHeight: 400,
+                defaultDate: new Date(),
+                timeFormat: 'h(:mm)a',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay,agenda'
+                },
+                eventLimit: true,
+                eventColor: '#378006',
+                events: events,
+                eventClick: function (calEvent, jsEvent, view) {                    
+                    selectedEvent = calEvent;                    
+                    $('#myModal #eventTitle').text(calEvent.title);
+                    var $description = $('<div/>');
+                    $description.append($('<p/>').html('<label id="calid" hidden>' + calEvent.id+"</label>"));
+                    $description.append($('<p/>').html('<b>Date : </b>' + calEvent.start.format("MM-DD-YYYY")));
+                    if (calEvent.end != null) {
+                        $description.append($('<p/>').html('<b>Time : </b>' +  calEvent.start.format("HH:mm A") +' To ' + calEvent.end.format("HH:mm A")));
+                    }
+                    $description.append($('<p/>').html('<b>Remark : </b>' + calEvent.description));
+                    $('#myModal #pDetails').empty().html($description);                   
+                    $('#myModal').modal('show'); 
+                },
+                selectable: true,
+                select: function (start, end) {
+                     if (moment().diff(start, 'days') > 0) {
+                        $('#calendar').fullCalendar('unselect');
+                        // or display some sort of alert
+                        return false;
+                    }
+                    selectedEvent = {
+                        id: 0,
+                        title:'',
+                        description: '',
+                        start: start,
+                        end: end,
+                        allDay: false,
+                        color: ''
+                    };
+                    OpenAddEditSchedulePopup();                    
+                    $('#calendar').fullCalendar('unselect');
+                },
+                editable: true,
+                eventDrop: function (event) {                    
+                    var data = {
+                        EventID: event.eventID,
+                        Start: event.start.format('DD/MM/YYYY HH:mm A'),
+                        End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm A') : null,
+                        Description: event.remark,
+                        ThemeColor: event.color,
+                    };
+                }
+            })
+        }
+        function OpenAddEditSchedulePopup() {
+            validationClear();
+            $('#divScheduleContent').show();
+            $('#date').empty();
+            $('#AddScheduleModal').modal('show');
+            if (selectedEvent != null) {
+                $('#date').val(selectedEvent.start.format('MM-DD-YYYY'));
+            }
+
+        }
+        function SaveEvent() {            
+            if($('#date').val() == null || $('#date').val() =='' ){
+                  $('#vldDate').text("Date is required");   
+            }else{
+                   $('#vldDate').text(""); 
+            }
+            if($('#startTime').val() ==''){
+                $('#vldStartTime').text("Start time is required");   
+            }else{
+                $('#vldStartTime').text("");  
+            }
+            if($('#endTime').val() =='' ){
+                 $('#vldEndTime').text("End time is required");   
+            }else{
+                $('#vldEndTime').text("");  
+            }
+            if($('#PatientId').val() ==''){
+                $('#vldPatientId').text("Please select patient")   
+            } else{
+                   $('#vldPatientId').text("");  
+            }
+            if($('#DoctorId').val() ==''){
+                 $('#vldDoctorId').text("Please select doctor");   
+            }      
+            else{
+                    $('#vldDoctorId').text("");  
+            }  
+            if($('#vldDate').text()=='' && $('#vldStartTime').text()=='' && $('#vldEndTime').text()=='' && $('#vldPatientId').text()=='' && $('#vldDoctorId').text()=='')
+            {   var data = {
+                    Id: $('#calenderid').val(),
+                    Date: $('#date').val(),
+                    Remark: $('#remark').val().trim(),
+                    StartTime: $('#startTime').val(),
+                    EndTime: $('#endTime').val(),
+                    DoctorId: $('#DoctorId').val(),
+                    PatientId: $('#PatientId').val(),
+                }
+                $(".loader").fadeIn(2000);
+                $.ajax({
+                    type: "POST",
+                    url: '/Admin/Calender/_AddOrUpdateCalendar',
+                    data: data,
+                    success: function (data) {
+                       $(".loader").fadeOut();
+                       if (data) {
+                         window.location.reload();                          
+                       }
+                    },
+                    error: function () {
+                        $(".loader").fadeOut();
+                        alert('Failed');
+                    }
+                })
+            }
+        }      
+        
+        function validationClear(){
+            $('#vldDate').text('');
+            $('#vldStartTime').text(''); 
+            $('#vldEndTime').text(''); 
+            $('#vldPatientId').text(''); 
+            $('#vldDoctorId').text('');
+        } 
+
+        function DeleteCalender() {    
+            swal({
+                title: "Are you sure you want to delete Event?",
+                text: "",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    var Id=$("#calid").text();
+                    $('#myModal').modal('hide');
+                    $.ajax({
+                        url: '/Admin/Calender/DeleteCalendar',
+                        data: { Id: Id },
+                        type: 'POST',
+                        success: function (data) {                          
+                            if (data) {                          
+                                toastr.success(
+                                    '',
+                                    'Deleted Successfully',
+                                    {
+                                        timeOut: 1000,
+                                        fadeOut: 1000,
+                                        onHidden: function () {
+                                           FetchEventAndRenderCalendar();
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    });
+                }
+                else {
+                    /*swal("Saved");*/
+                }
+            });
+        }
+
+        function AddEditSchedulePopup() {               
+               $('#myModal').modal('hide');
+               var Id=$("#calid").text();
+               $.ajax({
+                    type: "GET",
+                    url: "/Admin/Calender/_AddOrUpdateCalendar/?Id=" + Id,
+                    data: {},
+                    success: function (result) {
+                        $('#divScheduleContent').hide();
+                        $('#divScheduleContentModel').html(result);
+                        if (Id > 0) {
+                            $("#ModalTitle").html("Edit Schedule");
+                        }
+                        $('#OpenAddScheduleModal').modal('show');
+                    },
+                    error: function (result) {
+                        toastr.error('Scheduled detail is not available');
+                    }
+               });
+        }
+
+        function Cancel(){
+            $('#AddScheduleModal').modal('hide');         
+            validationClear();
+        }
+        $('.date').datepicker({ format: 'mm-dd-yyyy',minDate: new Date()});
+        $('.fromTime').timepicker({ format: 'hh:MM TT' });
+        $('.toTime').timepicker({ format: 'hh:MM TT' });
+     
+    </script>
+}

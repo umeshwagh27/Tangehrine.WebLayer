@@ -1,0 +1,89 @@
+﻿<div class="cstm-offcanvas">
+    <span class="offcanvas-btn btn-primary btnClick">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 10 12" style="enable-background: new 0 0 10 12;" xml:space="preserve">
+        <path d="M4,11.9C4.1,12,4.2,12,4.3,12c0.1,0,0.2,0,0.3-0.1l5.3-5.5C10,6.2,10,6.1,10,6c0-0.1,0-0.2-0.1-0.3L4.6,0.1 C4.5,0,4.3,0,4.2,0C4,0.1,3.9,0.2,3.9,0.3c0,0.2,0,0.3,0.1,0.4l5,5.2l-5,5.2c-0.1,0.1-0.1,0.2-0.1,0.3C3.8,11.7,3.9,11.8,4,11.9 L4,11.9z" />
+        <path d="M0.1,11.9C0.2,12,0.3,12,0.4,12s0.2,0,0.3-0.1L6,6.3C6.1,6.2,6.2,6.1,6.2,6c0-0.1,0-0.2-0.1-0.3L0.8,0.1 C0.6,0,0.5,0,0.3,0C0.2,0.1,0.1,0.2,0,0.3c0,0.2,0,0.3,0.1,0.4l5,5.2l-5,5.2C0,11.3,0,11.4,0,11.5C0,11.7,0,11.8,0.1,11.9L0.1,11.9z " />
+        </svg>
+    </span>
+    <div class="canvas-header"><h2>To Do List</h2></div>
+    <div class="canvas-body" >
+        <label class="form-label">Enter Detail </label>
+        <div class="mb-3">
+            <input type="text" class="form-control" id="message" oninput="ClearErrorStatus()" maxlength="50" placeholder="type here..." />
+            <label  id="errorStatus"  style="color:red" />
+        </div>
+        <div class="mb-3"  id="data1">         
+        </div>
+    </div>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {            
+            view();
+        });
+        function view() {
+            $.ajax({
+                url: '/Admin/ToDo/ToDoList',
+                type: 'GET',
+                success: function (data) {
+                    var item = '';
+                    $.each(data, function (key, value) {
+                       
+                            item += '<div class="form-check" id="body">' + "<input class='form-check-input'  onclick='return OptionsSelected(this)'  type='checkbox' data-id='" + value.id + "' name='options' value='" + value.message + "' />" + "<label class='form-check-label'>" + value.message + "</label >" + '</div>';
+                        
+                    });
+                    $('#data1').append(item);
+                }
+            });    
+        }       
+
+        function ClearErrorStatus() {            
+            $('#errorStatus').text("");          
+        }
+        function OptionsSelected(e) {    
+            var id = e.dataset.id ? e.dataset.id : null         
+            $.ajax({
+                url: '/Admin/ToDo/DeleteToDo',
+                data: { Id: id },
+                type: 'POST',
+                success: function (response) {
+                    if (response == true) {
+                        location.reload();
+                    }
+                },
+                error: function () {
+                    toastr.error('Please try again');
+                }
+            });
+        }    
+
+        $("#message").keypress(function (event) {       
+            
+            if (event.keyCode === 13){
+                if ($('#message').val().length === 0){                             
+                    $('#errorStatus').text("Please write somthing here . . .");                
+                }               
+                else{                   
+                    var formData = new FormData();
+                    formData.append("Message", $("#message").val());
+                    $.ajax({
+                        url: '/Admin/ToDo/AddToDoList',
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        cache: false,
+                        data: formData,
+                        success: function (response) {
+                            if (response.isSuccess == true) {
+                                location.reload();
+                            }
+                        },
+                        error: function () {
+                            toastr.error('Please try again');
+                        }
+                    });
+                }             
+            }
+        });
+    </script>
+</div>
+ 

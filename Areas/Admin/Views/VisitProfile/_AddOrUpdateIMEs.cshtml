@@ -1,0 +1,89 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!-- Add IMEs Modal -->
+<form method="post" id="IMEForm" asp-action="_AddOrUpdateIMEs" asp-area="Admin" asp-controller="VisitProfile">
+    <div class="modal fade" id="AddNewIMEsModal" tabindex="-1" aria-labelledby="AddNewIMEsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle">Add IMEs</h3>
+                    <div class="row">
+                        <input asp-for="IMEDto.PatientId" type="hidden" />
+                        <input asp-for="IMEDto.Id" type="hidden" />
+
+                        <div class="col-12">
+                            <input type="text" name="fake[email]" style="height:1px;width:1px;overflow:hidden;clip:rect(1px, 1px, 1px, 1px);border:0;outline:none;padding:0;margin:0;color:transparent;" tab-index="-1" aria-hidden="true" value=".">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.Attorney" class="form-label required">Attorney </label>
+                            <input type="text" asp-for="IMEDto.Attorney" class="form-control" id="" placeholder="Enter Attorney" />
+                            <span asp-validation-for="IMEDto.Attorney" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.AttorneyContact" class="form-label required">Contact </label>
+                            <input type="text" asp-for="IMEDto.AttorneyContact" class="form-control" id="" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" placeholder="Enter Attorney's Contact" />
+                            <span asp-validation-for="IMEDto.AttorneyContact" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.Specialist" class="form-label required">Specialist </label>
+                            <input class="form-control" asp-for="IMEDto.Specialist" placeholder="Enter Specialist" />
+                            <span asp-validation-for="IMEDto.Specialist" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.SpecialistContact" class="form-label required">Contact </label>
+                            <input class="form-control" asp-for="IMEDto.SpecialistContact" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" placeholder="Enter Specialist's Contact" />
+                            <span asp-validation-for="IMEDto.SpecialistContact" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.Surgery" class="form-label ">Surgery </label>
+                            <input class="form-control" asp-for="IMEDto.Surgery" placeholder="Enter Surgery" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.SurgeryDate" class="form-label ">Date </label>
+                            <input type="text" class="form-control surgeryDate" asp-for="IMEDto.SurgeryDate" id="surgeryDate" placeholder="Enter Surgery's Date" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.EKG" class="form-label ">EKG </label>
+                            <input class="form-control" asp-for="IMEDto.EKG" placeholder="Enter EKG" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.EKGDate" class="form-label ">Date </label>
+                            <input type="text" class="form-control ekgDate" asp-for="IMEDto.EKGDate" id="ekgDate" placeholder="Enter EkG's Date" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="IMEDto.PrimaryCare" class="form-label required">Primary Care </label>
+                            <input type="text" asp-for="IMEDto.PrimaryCare" class="form-control" id="" placeholder="Enter Primary Care" />
+                            <span asp-validation-for="IMEDto.PrimaryCare" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Save">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add IMEs Modal -->
+</form>
+<partial name="_ValidationScriptsPartial" />
+<script>
+        $(document).ready(function () {      
+          $('#surgeryDate').datepicker({ format: 'mm-dd-yyyy' });
+          $('#ekgDate').datepicker({ format: 'mm-dd-yyyy' });        
+        }); 
+      $("IMEForm").on("submit", (event) => { event.preventDefault(); });
+</script>

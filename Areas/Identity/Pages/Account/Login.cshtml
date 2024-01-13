@@ -1,0 +1,49 @@
+@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Welcome Back!";
+    Layout = "~/Views/Shared/_LayoutBeforeLogin.cshtml";
+}
+<div class="login-main">
+    <div class="container">
+        <div class="login-block">
+            <div class="left">
+                <div class="logo"><img src="~/assets/images/logo.png" alt="Logo" /></div>
+                <div class="login-img"><img src="~/assets/images/login-inner.png" class="login-inner" /></div>
+            </div>
+            <div class="right">
+                <h1>@ViewData["Title"]</h1>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <form id="account" method="post" class="login-cmn-form">
+                    <div class="mb-3 mb-md-4">
+                        <input asp-for="Input.Email" class="form-control" value="@ViewData["UserName"]" placeholder="Enter Email" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3 mb-md-4">
+                        <input asp-for="Input.Password" value="@ViewData["Password"]" class="form-control" placeholder="Enter Password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div class="row align-items-center justify-content-between">
+                        <div class="mb-3 mb-md-4 col-auto">
+                            <div class="form-check">
+                                <input asp-for="Input.RememberMe" checked="@ViewData["RememberMe"]" class="form-check-input" />
+                                <label asp-for="Input.RememberMe" class="form-check-label" for="remember-password">Keep me logged in</label>
+                            </div>
+                        </div>
+                        <div class="mb-3 mb-md-4 col-auto form-check">
+                            <a class="forgot-link" id="forgot-password" asp-page="./ForgotPassword">Forgot Password</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-50">Log in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+}

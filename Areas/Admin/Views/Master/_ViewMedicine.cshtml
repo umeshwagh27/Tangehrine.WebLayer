@@ -1,0 +1,106 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.MasterDto;
+
+<div class="tab-pane fade show active" id="nav-MedicineMaster" role="tabpanel" aria-labelledby="nav-MedicineMaster-tab">
+    <div class="main-title-wrap mb-3 mb-md-4">
+        <h1 class="main-title">Medications</h1>
+        <div class="ms-auto">
+            <button title="Add Medicine" type="button" onclick="AddMedications()" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddMedicineModal">
+                <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Medication</span>
+            </button>
+        </div>
+    </div>
+    <div class="table-md-responsive">
+        <table class="table table-bordered table-striped table-light block-table" id="medicineList">
+            <thead>
+                <tr>
+                    <th>Medicines</th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+            </thead>
+            @*<tbody>
+                @if (Model.medicineDtos != null && Model.medicineDtos.Count() > 0)
+                {
+                    @foreach (var item in Model.medicineDtos)
+                    {
+                        <tr>
+                            <td data-title="Medicines">
+                                @item.MedicineName
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="action-btn edit" onclick="myEdit(@item.Id)"><i class="far fa-edit"></i></button>
+                                    <button class="action-btn delete"><i class="far fa-trash-alt" onclick="deleteMedicine(@item.Id)"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            <h3 class="text-center text-danger">
+                                No Records Found
+                            </h3>
+                        </td>
+                    </tr>
+                }
+            </tbody>*@
+        </table>
+    </div>
+
+</div>
+
+
+@section Scripts{
+@*
+    <script type="text/javascript">
+        $(document).ready(function () {
+      
+            console.log("tstr");
+            if ($.fn.DataTable.isDataTable("#medicineList")) {
+                $("#medicineList").dataTable().fnDestroy();
+            }
+             $("#medicineList")
+                .DataTable({
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": "/Admin/Master/GetMedicine",
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { }, "fnDrawCallback": function (oSettings) {
+                        if (oSettings._iDisplayLength > oSettings.fnRecordsDisplay()) {
+                            $(oSettings.nTableWrapper).find('.dataTables_paginate').hide();
+                            $("#tblNewEquipment_info").hide();
+                        } else {
+                            $(oSettings.nTableWrapper).find('.dataTables_paginate').show();
+                            $("#tblNewEquipment_info").show();
+                        }
+                    },
+                    "order": [[1, ""]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_Equipment requirement",
+                        "sInfoEmpty": "Showing 0 to 0 of 0 Equipment requirement"
+                    },
+                    "columns": [
+                        {
+                            "data": "medicineName",
+                            "width": "5%",
+                            "searchable": false,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "autoWidth": true,
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+
+                                var element = `<a onclick="myEdit('${row.id}');" class="editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="deleteMedicine('${row.id}');" class="deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`;
+                                return element;
+                            }
+                        }
+                    ]
+                });
+        });
+    </script>*@
+}

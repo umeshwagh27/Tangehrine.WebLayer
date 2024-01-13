@@ -1,0 +1,54 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+
+<form method="post" id="VisitForm" asp-action="AddOrEditVisit" asp-area="Admin" asp-controller="VisitProfile">
+    @Html.AntiForgeryToken()
+    <div class="modal fade test" id="AddVisitModal" tabindex="-1" aria-labelledby="AddVisitModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle">Add Visit</h3>
+                    <div class="row">                      
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="col-12">
+                            <input type="text" name="fake[email]" style="height:1px;width:1px;overflow:hidden;clip:rect(1px, 1px, 1px, 1px);border:0;outline:none;padding:0;margin:0;color:transparent;" tab-index="-1" aria-hidden="true" value=".">
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <input asp-for="VisitDto.PatientId" type="hidden" />
+                            <input asp-for="VisitDto.Id" type="hidden" />
+
+                            <label asp-for="VisitDto.VisitDate" class="form-label required">Date</label>
+                            <input asp-for="VisitDto.VisitDate" type="text" class="form-control visitDate" id="VisitDate" placeholder="Select Date" autocomplete="off" />
+                            <span asp-validation-for="VisitDto.VisitDate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VisitDto.FromTime" class="form-label required">From Time</label>
+                            <input type="text" asp-for="VisitDto.FromTime" class="form-control  fromTime" id="FromTime" placeholder="Select Time" />
+                            <span asp-validation-for="VisitDto.FromTime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="VisitDto.ToTime" class="form-label required">To Time</label>
+                            <input type="text" asp-for="VisitDto.ToTime" class="form-control toTime" id="ToTime" placeholder="Select Time" />
+                            <span asp-validation-for="VisitDto.ToTime" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Save" />
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<partial name="_ValidationScriptsPartial" />
+<script>
+    $("VisitForm").on("submit", (event) => { event.preventDefault(); });
+    $('.visitDate').datepicker({ format: 'mm-dd-yyyy' });
+    $('.toTime').timepicker({  format: 'hh:MM TT'});
+    $('.fromTime').timepicker({ format: 'hh:MM TT'});
+</script>
+
+
+
+

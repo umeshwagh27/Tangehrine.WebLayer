@@ -1,0 +1,85 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<form method="post" id="VitalForm" asp-action="_AddOrUpdateVital" asp-area="Admin" asp-controller="VisitProfile">
+    <!-- Add Vital Modal -->
+    <div class="modal fade" id="AddVitalsModal" tabindex="-1" aria-labelledby="AddVitalsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+            <div class="modal-content add-body">
+                <div class="modal-body">
+                    <h3 id="ModalTitle">Add Vital</h3>
+     
+                    <div class="row g-3">
+                        <input asp-for="VitalDto.PatientId" type="hidden" />
+                        <input asp-for="VitalDto.Id" type="hidden" />
+
+                        <div class="col-12">
+                            <input type="text" name="fake[email]" style="height:1px;width:1px;overflow:hidden;clip:rect(1px, 1px, 1px, 1px);border:0;outline:none;padding:0;margin:0;color:transparent;" tab-index="-1" aria-hidden="true" value=".">
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="VitalDto.VitalDate" class="form-label">Date </label>
+                            <input type="text" asp-for="VitalDto.VitalDate" class="form-control date" id="" autocomplete="off" placeholder="Date" />
+                            <span asp-validation-for="VitalDto.VitalDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.Systolic" class="form-label">Systolic </label>
+                            <input asp-for="VitalDto.Systolic" class="form-control" id="" placeholder="Add Systolic" />
+
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.Diastolic" class="form-label">Diastolic </label>
+                            <input asp-for="VitalDto.Diastolic" class="form-control" id="" placeholder="Add Diastolic" />
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.HeartRate" class="form-label">Heart rate </label>
+                            <input asp-for="VitalDto.HeartRate" oninput="this.value = this.value.replace(/[^0-9]/g, '');" type="text"  class="form-control" id="" placeholder="Add Heart rate" />
+                            <span asp-validation-for="VitalDto.HeartRate" id="" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.Weight" class="form-label">Weight </label>
+                            <input asp-for="VitalDto.Weight" class="form-control" id="" placeholder="Add Weight(eg:55.5)" />
+                            <span asp-validation-for="VitalDto.Weight" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.Height" class="form-label">Height </label>
+                            <input asp-for="VitalDto.Height" type="text" class="form-control" id="" placeholder="Add Height(eg:5'7'')" />
+                            <span asp-validation-for="VitalDto.Height" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.BMI" class="form-label">BMI </label>
+                            <input asp-for="VitalDto.BMI" type="text" class="form-control" id="" placeholder="Add BMI" />
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.BMIRange" class="form-label">BMI range </label>
+                            <input asp-for="VitalDto.BMIRange" class="form-control" id="" placeholder="Add BMI range" />
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.PainScore" class="form-label">Pain Score </label>
+                            <input asp-for="VitalDto.PainScore" class="form-control" id="" placeholder="Add Pain Score" />
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label asp-for="VitalDto.Source" class="form-label">Source </label>
+                            <input asp-for="VitalDto.Source" class="form-control" id="" placeholder="Add Source" />
+                        </div>
+                    </div>
+                    <div class="mb-3"></div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary"  value="Save">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Vital Modal -->
+</form>
+
+
+<partial name="_ValidationScriptsPartial" />
+<script>
+      $(document).ready(function () {
+        $('.date').datepicker({ format: 'mm-dd-yyyy' });
+      });
+    $("VitalForm").on("submit", (event) => { event.preventDefault(); });
+</script>

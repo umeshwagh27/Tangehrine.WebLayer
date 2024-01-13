@@ -1,0 +1,1196 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+@{
+    ViewData["Title"] = "Patient Details!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}       
+
+<body class="has-sidebar" style="width:100%">  
+    <main>
+        @{
+            var a = Model.PatientDto.Id;
+            ViewData["id"] = a;
+        }
+
+        <div class="card cstm-card mb-4 client-detail-card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    @*Patient details start*@
+                    <div class="col-12 col-xxl mb-3">
+                        <div class="media">
+                            <div class="bordered-img">
+                                @if (Model.PatientDto.PatientPhotoUrl != null)
+                                {
+                                    <img src="~/PatientImages/@Model.PatientDto.PatientPhotoUrl" alt="avatar" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/images/avatar-3.png" alt="avatar" />
+                                }
+                            </div>
+
+                            <div class="media-body">
+                                <h3>@Model.PatientDto.FirstName @Model.PatientDto.LastName</h3>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-6 mb-md-3 mb-lg-0">
+                                        <span class="details-inner"><i class="fas fa-birthday-cake"></i>@Model.PatientDto.BirthDate.ToString("MM-dd-yyyy").Replace("/","-")</span>
+                                        <a class="details-inner" href="mailto:jnray15@sbcgglobal.net"><i class="fas fa-envelope"></i>@Model.PatientDto.Email</a>
+                                        <a class="details-inner" href="tel:8602165904120"><i class="fas fa-mobile-alt"></i>@Model.PatientDto.Mobile @Model.PatientDto.Mobile2</a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-md-3 mb-lg-0">
+                                        <address class="details-inner"><i class="fas fa-map-marker-alt"></i>@Model.PatientDto.Address</address>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 mb-md-3 mb-lg-0">
+                                        <span class="details-inner"><i class="fas fa-user-tie"></i>@Model.PatientDto.RelativeFirstName @Model.PatientDto.RelativeLastName [@Model.PatientDto.RelationShipName]</span>
+                                        <a class="details-inner" href="tel:2036101105"><i class="fas fa-phone"></i>@Model.PatientDto.RelativePhoneNo</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*Patient details end*@
+
+                    @*Last visit and Next visit start*@
+                    @if (Model.PatientVisitDto.visit == null && Model.PatientVisitDto.lastVisit == null && Model.PatientVisitDto.nextVisit == null)
+                    {
+                        <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                            <button id="test" title="Add Visit" type="button" class="btn btn-primary btn-50" data-bs-target="#AddVisitModal" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(0,@Model.PatientDto.Id);">
+                                <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Visit</span>
+                            </button>
+                        </div>
+
+                    }
+                    else if (Model.PatientVisitDto.lastVisit != null && Model.PatientVisitDto.nextVisit != null)
+                    {
+                        @*Last Visit*@
+                        <div class="col-sm-6 col-lg-auto ms-md-auto col-xxl-auto mb-3 mb-md-0">
+                            <div class="visit-block tele-clinic">
+                                <div class="row align-items-center justify-content-between mb-1 mb-md-3">
+                                    <div class="col-auto"><h3>Last Visit</h3></div>
+                                    <div class="col-auto">
+                                        <div class="action-btns">
+                                            <button class="action-btn edit" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(@Model.PatientVisitDto.lastVisit.Id,@Model.PatientDto.Id);"><i class="far fa-edit"></i></button>
+                                            <button class="action-btn delete" onclick="DeletePatientVisit(@Model.PatientVisitDto.lastVisit.Id);"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inner">
+                                    <div class="mb-3"><strong>@Model.PatientVisitDto.lastVisit.VisitDate</strong>&nbsp;&nbsp;<strong>(@Model.PatientVisitDto.lastVisit.VisitDay)</strong></div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span>@Model.PatientVisitDto.lastVisit.FromTime</span>
+                                        <span>To</span>
+                                        <span>@Model.PatientVisitDto.lastVisit.ToTime</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*Next Visit*@
+                        <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                            <div class="visit-block next-visit">
+                                <div class="row align-items-center justify-content-between mb-1 mb-md-3">
+                                    <div class="col-auto"><h3>Next Visit</h3></div>
+                                    <div class="col-auto">
+                                        <div class="action-btns">
+                                            <button class="action-btn edit" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(@Model.PatientVisitDto.nextVisit.Id,@Model.PatientDto.Id);"><i class="far fa-edit"></i></button>
+                                            <button class="action-btn delete" onclick="DeletePatientVisit(@Model.PatientVisitDto.nextVisit.Id);"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="inner">
+                                    <div class="mb-3"><strong>@Model.PatientVisitDto.nextVisit.VisitDate</strong>&nbsp;&nbsp;<strong>(@Model.PatientVisitDto.nextVisit.VisitDay)</strong></div>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span>@Model.PatientVisitDto.nextVisit.FromTime</span>
+                                        <span>To</span>
+                                        <span>@Model.PatientVisitDto.nextVisit.ToTime</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        if (!Model.PatientVisitDto.visit.IsNextVisit)
+                        {
+                            @*Last Visit*@
+                            <div class="col-sm-6 col-lg-auto ms-md-auto col-xxl-auto mb-3 mb-md-0">
+                                <div class="visit-block tele-clinic">
+                                    <div class="row align-items-center justify-content-between mb-1 mb-md-3">
+                                        <div class="col-auto"><h3>Last Visit</h3></div>
+                                        <div class="col-auto">
+                                            <div class="action-btns">
+                                                <button class="action-btn edit" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(@Model.PatientVisitDto.visit.Id,@Model.PatientDto.Id);"><i class="far fa-edit"></i></button>
+                                                <button class="action-btn delete" onclick="DeletePatientVisit(@Model.PatientVisitDto.visit.Id);"><i class="far fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="inner">
+                                        <div class="mb-3"><strong>@Model.PatientVisitDto.visit.VisitDate</strong>&nbsp;&nbsp;<strong>(@Model.PatientVisitDto.visit.VisitDay)</strong></div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span>@Model.PatientVisitDto.visit.FromTime</span>
+                                            <span>To</span>
+                                            <span>@Model.PatientVisitDto.visit.ToTime</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Next Visit*@
+                            <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                                <div class="visit-block next-visit">
+                                    <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                                        <button title="Add Visit" type="button" class="btn btn-primary btn-50" data-bs-target="#AddVisitModal" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(0,@Model.PatientDto.Id);">
+                                            <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Visit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            //last last
+                            <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                                <div class="visit-block next-visit">
+                                    <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                                        <button title="Add Visit" type="button" class="btn btn-primary btn-50" data-bs-target="#AddVisitModal" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(0,@Model.PatientDto.Id);">
+                                            <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Visit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Next Visit*@
+                            <div class="col-sm-6 col-lg-auto col-xxl-auto">
+                                <div class="visit-block next-visit">
+                                    <div class="row align-items-center justify-content-between mb-1 mb-md-3">
+                                        <div class="col-auto"><h3>Next Visit</h3></div>
+                                        <div class="col-auto">
+                                            <div class="action-btns">
+                                                <button class="action-btn edit" data-id="@Model.PatientDto.Id" onclick="OpenAddEditVisitPopup(@Model.PatientVisitDto.visit.Id,@Model.PatientDto.Id);"><i class="far fa-edit"></i></button>
+                                                <button class="action-btn delete" onclick="DeletePatientVisit(@Model.PatientVisitDto.visit.Id);"><i class="far fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="inner">
+                                        <div class="mb-3"><strong>@Model.PatientVisitDto.visit.VisitDate</strong>&nbsp;&nbsp;<strong>(@Model.PatientVisitDto.visit.VisitDay)</strong></div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span>@Model.PatientVisitDto.visit.FromTime</span>
+                                            <span>To</span>
+                                            <span>@Model.PatientVisitDto.visit.ToTime</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @*Last visit and Next visit end*@
+                </div>
+            </div>
+        </div>
+        <div class="card cstm-card">
+            <div class="card-body">
+                <nav>
+                    <div class="nav admin-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-PreVisitNotes-tab" data-bs-toggle="tab" role="tab" data-bs-target='#nav-PreVisitNotes' name="nav-PreVisitNotes" type="button" aria-selected="true" aria-controls="nav-PreVisitNotes">
+                            <i class="fas fa-sticky-note"></i>PreVisit Notes
+                        </button>
+                        <button class="nav-link" id="nav-History-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target='#nav-History' name="nav-History" aria-selected="false" aria-controls="nav-History">
+                            <i class="fas fa-clock"></i>History
+                        </button>
+                        <button class="nav-link" id="nav-imes-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#nav-imes" aria-controls="nav-imes" aria-selected="false">
+                            <i class="fas fa-clipboard-check"></i>IMEs
+                        </button>
+                        <button class="nav-link" id="nav-MedicinesStates-tab" data-bs-toggle="tab" data-bs-target="#nav-MedicinesStates" type="button" role="tab" aria-controls="nav-MedicinesStates" aria-selected="false">
+                            <i class="fas fa-chart-area"></i>Medicines/State
+                        </button>
+                        <button class="nav-link" id="nav-CheckupRecords-tab" data-bs-toggle="tab" data-bs-target="#nav-CheckupRecords" type="button" role="tab" aria-controls="nav-CheckupRecords" aria-selected="false">
+                            <i class="fas fa-file-alt"></i>Checkup Records
+                        </button>
+                        <button class="nav-link" id="nav-LabReports-tab" data-bs-toggle="tab" data-bs-target="#nav-LabReports" type="button" role="tab" aria-controls="nav-LabReports" aria-selected="false">
+                            <i class="fas fa-file-medical"></i>Lab Reports
+                        </button>
+                         <button class="nav-link" id="nav-Notes-tab" data-bs-toggle="tab" data-bs-target="#nav-Notes" type="button" role="tab" aria-controls="nav-Notes" aria-selected="false">
+                            <i class="fas fa-receipt"></i>Notes
+                        </button>
+                        <button class="nav-link" id="nav-Communication-tab" data-bs-toggle="tab" data-bs-target="#nav-Communication" type="button" role="tab" aria-controls="nav-Communication" aria-selected="false">
+                            <i class="fas fa-comment-alt"></i>Communication
+                        </button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade active show" id="nav-PreVisitNotes" role="tabpanel" aria-labelledby="nav-PreVisitNotes-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">Pre-Visit Notes</h2>
+                            <div class="ms-auto">
+                                <button title="Add New Record" type="button" class="btn btn-primary btn-50" onclick="OpenAddEditPreVisitNoteModel(0, @Model.PatientDto.Id)" data-bs-target="#AddNewPreVisitNoteModal">
+                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Pre-Visit Notes</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-md-responsive">
+                            <table class="table table-bordered table-striped cstm-table block-table" id="preVisit">
+                                <thead>
+                                    <tr>
+                                        <th> Date</th>
+                                        <th>Doctor</th>
+                                        <th>Remark</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="divPreVisitNoteModel">
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-History" role="tabpanel" aria-labelledby="nav-History-tab">
+                        <form method="post" id="HistoryForm" asp-action="AddOrUpdateHistory" asp-area="Admin" asp-controller="VisitProfile">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h2 class="main-title">History</h2>
+                            </div>
+                            @*<input type="hidden" asp-for="HistoryDto.Id" />*@
+                            <input type="hidden" asp-for="HistoryDto.PatientId" value="@Model.PatientDto.Id" />
+                            <textarea asp-for="HistoryDto.HistoryNote" id="summernote"></textarea>
+                            <span asp-validation-for="HistoryDto.HistoryNote" class="text-danger"></span>
+
+                            <div class="text-end mt-3 mt-md-5">
+                                <input type="submit" class="btn btn-primary" value="Save" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="nav-imes" role="tabpanel"  aria-labelledby="nav-imes-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">IMEs</h2>
+                            <div class="ms-auto">
+                                <button title="Add New Record" type="button" class="btn btn-primary btn-50" data-bs-target="#AddNewIMEsModal"
+                                        onclick="OpenAddEditOfIME(0,@Model.PatientDto.Id)">
+                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add IMEs</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-md-responsive">
+                            <table class="table table-bordered table-striped cstm-table block-table" id="IMEtbl">
+                                <thead>
+                                    <tr>
+                                        <th>Attorney</th>
+                                        <th>Specialists</th>
+                                        <th>EKG</th>
+                                        <th>Surgeries</th>
+                                        <th>Primary Care</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade " id="nav-MedicinesStates" role="tabpanel" aria-labelledby="nav-MedicinesStates-tab">
+                        <div class="mb-3">
+                            <div class="d-none d-lg-block">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="main-title-wrap mb-3 mb-md-4">
+                                            <a class="me-2" data-bs-toggle="collapse" href="#MedicineStateCollapse" role="button" aria-expanded="true" aria-controls="MedicineStateCollapse"><i class="fas fa-caret-down"></i></a>
+                                            <h2 class="main-title">Medicine/State</h2>
+                                            <div class="ms-auto">
+                                                <button title="Add New Record" type="button" class="btn btn-primary btn-50" onclick="OpenAddEditMedicalState(@Model.PatientMedicineOutput.Id, @Model.PatientMedicineOutput.PatientId, @Model.PatientMedicineOutput.MedicineDate)" data-bs-target="#AddMedicalStateModal">
+                                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Medicines</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="main-title-wrap mb-3 mb-md-4">
+                                            <h2 class="main-title">Vitals</h2>
+                                            <div class="ms-auto">
+                                                <button title="Add New Record" type="button" onclick="OpenAddEditVital(0,@Model.PatientDto.Id)" class="btn btn-primary btn-50" data-bs-target="#AddVitalsModal">
+                                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Vital</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="collapse show" id="MedicineStateCollapse">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="d-lg-none">
+                                            <div class="main-title-wrap mb-3 mb-md-4">
+                                                <h2 class="main-title">Medicine/State</h2>
+                                                <div class="ms-auto">
+                                                    <button title="Add New Record" type="button" class="btn btn-primary btn-50" data-bs-target="#AddMedicalStateModal">
+                                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Medicine</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="MedicineTBL" class="table table-bordered table-striped cstm-table">
+                                                @for (var i = 0; i < Model.MedicineAndPatientList.GetLength(0); i++)
+                                                {
+                                                    <tr>
+                                                        @for (var j = 0; j < Model.MedicineAndPatientList.GetLength(1); j++)
+                                                        {
+                                                            @if (@Model.MedicineAndPatientList[i, j] == null)
+                                                            {
+                                                                <td>-</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                @*<td>
+                                                                    <thead>
+                                                                        @if (@Model.MedicineAndPatientList[i, j].ToString().Contains("<button"))
+                                                                        {
+                                                                            <th>@Html.Raw(@Model.MedicineAndPatientList[i, j])</th>
+                                                                        }
+                                                                    </thead>
+                                                                </td>*@
+                                                                <td>@Html.Raw(@Model.MedicineAndPatientList[i, j])</td>
+                                                            }
+                                                        }
+                                                    </tr>
+                                                }
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="d-lg-none">
+                                            @*extra*@
+                                            <div class="main-title-wrap mb-3 mb-md-4">
+                                                <h2 class="main-title">Vitals</h2>
+                                                <div class="ms-auto">
+                                                    <button title="Add Vital" type="button" class="btn btn-primary btn-50" data-bs-toggle="modal" data-bs-target="#AddVitalsModal">
+                                                        <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Vital</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-borderless non-padding-table record-table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table class="table table-bordered table-striped cstm-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Date</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>Systolic</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Diastolic</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>HeartRate</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Weight</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Height</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>BMI</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>BMI Range</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Pain Score</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>Source</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        @if (Model.VitalListDto.Count > 0)
+                                                        {
+                                                            @foreach (var item in Model.VitalListDto)
+                                                            {
+                                                                <td>
+                                                                    <table class="table table-bordered table-striped cstm-table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th >
+                                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                                        <span>@item.VitalDate</span>
+                                                                                        <div class="action-btns">
+                                                                                            <button onclick=" OpenAddEditVital(@item.Id, @item.PatientId)" class="action-btn edit"><i class="far fa-edit"></i></button>
+                                                                                            <button onclick="DeleteVitalOfPatient(@item.Id)" class="action-btn delete"><i class="far fa-trash-alt"></i></button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>@item.Systolic</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.Diastolic</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.HeartRate</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.Weight</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.Height</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.BMI</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.BMIRange</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.PainScore</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>@item.Source</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <table class="table table-bordered table-striped cstm-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                          <td colspan="2"></td>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td rowspan="12">
+                                                                                <h3 class="text-center text-danger">
+                                                                                    No Records Found
+                                                                                </h3>
+                                                                            </td> 
+                                                                        </tr>                                                                  
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h2 class="main-title">Statistics </h2>
+                            </div>
+                            <div id="chartdiv"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="main-title-wrap mb-3 mb-md-4">
+                                <h2 class="main-title">Statement Trends </h2>
+                            </div>
+                            <div class="mb-3 mb-md-4">
+                                <label for="" class="form-label">Add Tag </label>
+                                <div class="row">
+                                    <div class="col">
+                                        <input class="form-control" id="searchStatement" />                                       
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="ms-auto">
+                                            <button title="Add New Record" type="button" class="btn btn-primary btn-50"
+                                                    onclick="OpenAddEditPreStatementTrendsModel(0, @Model.PatientDto.Id)" data-bs-target="#AddNewPreStatementTrendsModal">
+                                                <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Statement</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-md-responsive">
+                                <table id="StatementTBL" class="table table-bordered table-striped cstm-table block-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Statements</th>
+                                            <th style="width: 10%;">Repeatation</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div id="divPreStatementTrendsModel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-CheckupRecords" role="tabpanel" aria-labelledby="nav-CheckupRecords-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">Checkup Records</h2>
+                            <div class="ms-auto">
+                                <button title="Add Checkup Records" type="button" onclick="OpenAddEditCheckupRecords(@Model.PatientCheckupRecordsOutputDto.Id, @Model.PatientCheckupRecordsOutputDto.PatientId, @Model.PatientCheckupRecordsOutputDto.CheckupDate)" class="btn btn-primary btn-50" data-bs-target="#AddCheckupRecordsModal">
+                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Checkup Records</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="CheckupRecordsTBL" class="table table-bordered table-striped cstm-table">
+
+                                @for (var i = 0; i < Model.CheckupRecordsList.GetLength(0); i++)
+                                {
+                                    <tr>
+                                        @for (var j = 0; j < Model.CheckupRecordsList.GetLength(1); j++)
+                                        {
+                                            @if (@Model.CheckupRecordsList[i, j] == null)
+                                            {
+                                                <td>-</td>
+                                            }
+                                            else
+                                            {
+                                                <td >@Html.Raw(@Model.CheckupRecordsList[i, j])</td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <!-- Add Checkup Reports Modal -->
+                        @*<div class="modal fade" id="AddCheckupRecordsModal" tabindex="-1" aria-labelledby="AddCheckupRecordsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                                <div class="modal-content add-body">
+                                    <div class="modal-body">
+                                        <h3 class="text-center">Add New Record</h3>
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Date :</label>
+                                            <input type="date" class="form-control" id="" placeholder="Add Medicine" />
+                                        </div>
+                                        <div class="mb-4 mb-lg-5 repeater">
+                                            <label for="" class="form-label">Specialists :</label>
+                                            <div data-repeater-list="group-b">
+                                                <div data-repeater-item class="row align-items-center mb-3 g-3">
+                                                    <div class="col-md">
+                                                        <label for="" class="form-label">Checkup Report :</label>
+                                                        <select class="form-select">
+                                                            <option>Select</option>
+                                                            <option>Select</option>
+                                                            <option>Select</option>
+                                                            <option>Select</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md">
+                                                        <label for="" class="form-label">Observations :</label>
+                                                        <input type="text" class="form-control" placeholder="Add Dose" />
+                                                    </div>
+                                                    <div class="col-md-auto">
+                                                        <label class="form-label d-none d-md-block">&nbsp;</label>
+                                                        <div>
+                                                            <span data-repeater-create class="text-orange"><i class="fas fa-plus-square"></i></span>
+                                                            <span data-repeater-delete class="text-danger"><i class="far fa-trash-alt"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-primary">Save</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        <!-- Add Checkup Reports Modal -->
+                    </div>
+                    <div class="tab-pane fade" id="nav-LabReports" role="tabpanel" aria-labelledby="nav-LabReports-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">Lab Reports</h2>
+                            <div class="ms-auto">
+                                <button title="Add New Record" onclick="OpenAddEditOfPatientLabReport(0,@Model.PatientDto.Id)" type="button" class="btn btn-primary btn-50" data-bs-target="#AddLabReportModal">
+                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Lab Report</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-md-responsive">
+                            <table id="PatientLabReporttbl" class="table table-bordered table-striped cstm-table block-table">
+                                <thead>
+                                    <tr>
+                                        <th>Report Name</th>
+                                        <th>Date</th>
+                                        <th>Attachment</th>
+                                        <th class="table-actions">Actions</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Communication" role="tabpanel" aria-labelledby="nav-Communication-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">Communication</h2>
+                        </div>
+                        <div class="chat-block">
+                            <div class="chat-box">
+                                <div class="inner">
+                                    <p>
+                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of
+                                        type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                                    </p>
+                                    <span>21/11/2021, 9:00 am</span>
+                                </div>
+                                <span class="icon"><i class="fas fa-comment-alt"></i></span>
+                            </div>
+                            <div class="chat-box">
+                                <div class="inner">
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                    <span>21/11/2021, 9:00 am</span>
+                                </div>
+                                <span class="icon"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <div class="row mt-md-5 mt-3">
+                                <div class="col"><input type="text" name="" placeholder="Type Something ..." /></div>
+                                <div class="col-auto">
+                                    <button class="chat-btns btn-primary" type="button"><i class="fas fa-comment-alt"></i></button>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="chat-btns btn-primary" type="button"><i class="fas fa-envelope"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-Notes" role="tabpanel" aria-labelledby="nav-Notes-tab">
+                        <div class="main-title-wrap mb-3 mb-md-4">
+                            <h2 class="main-title">Notes</h2>
+                            <div class="ms-auto">
+                                <button title="Add New Record" onclick="OpenAddEditOfPatientNotes(0,@Model.PatientDto.Id)" type="button" class="btn btn-primary btn-50" data-bs-target="#AddNotesModal">
+                                    <i class="d-md-none fas fa-plus"></i><span class="d-none d-md-block">Add Notes</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-md-responsive">
+                            <table id="PatientNotestbl" class="table table-bordered table-striped cstm-table block-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>                                      
+                                        <th>Remark</th>
+                                        <th>Attachment</th>
+                                        <th class="table-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+        </div>
+        <div id="divVisitContent">
+        </div>
+    </main>
+</body>
+@section Scripts {
+    @await Component.InvokeAsync("Notyf")
+    <script src="~/js/Admin/PatientDetails.js"></script>
+    <script>$("HistoryForm").on("submit", (event) => { event.preventDefault(); });</script>
+    <script>
+        var data = [];
+        $(document).ready(function () {      
+          
+            ViewPriVisitNotes();
+            ViewIme();
+            ViewLabReport();
+            GetPatientStatement();
+            ViewNotes();
+           // data - bs - target="#nav-PreVisitNotes"
+            data = [];
+            Chardata;
+             $.ajax({
+                 url: "/Admin/VisitProfile/GetStatement?PatientId=" +@Model.PatientDto.Id,
+                type: "GET",
+                 success: function (response) {
+                     $.each(response, function (index, value) {
+                         data.push(value.statement)
+                     });
+                     $("#searchStatement").autocomplete({
+                         source: data,
+                         select: function (e, i) {
+                              $.ajax({
+                                  url: "/Admin/VisitProfile/GetStatement?PatientId=" +@Model.PatientDto.Id + "&statement=" + i.item.value,
+                                type: "GET",
+                                 success: function (response) {
+                                     $("#StatementTBL tbody").html("");
+                                     var htmlres = "<tr>";
+                                     $.each(response, function (index, value) {
+                                         htmlres += "<td>" + value.statement + "</td>";
+                                         htmlres += "<td>"+
+                                                        "<div class='incrementer'>"+
+                                                            `<span onclick="updateStatement((${value.count} - 1), '${value.statement}', ${value.id}, this)" class="qty-bttn-minus">-</span>`+
+                                                            `<input type="text" name="" value='${value.count}' class="qty" />`+
+                                                            `<span onclick="updateStatement((${value.count} + 1), '${value.statement}', ${value.id}, this)" class="qty-bttn-plus">+</span>`+
+                                                        "</div>"+
+                                                    "</td>";
+                                     });
+                                     htmlres += "</tr>";
+                                     $("#StatementTBL tbody").html(htmlres);
+                                 }
+                              });
+                         },
+                     });
+                 }
+             });
+        });
+
+
+        var Chardata= GetChartData(@Model.PatientDto.Id);
+        function ViewPriVisitNotes() {
+            if ($.fn.DataTable.isDataTable("#preVisit")) {
+                $("#preVisit").dataTable().fnDestroy();
+            }
+            $("#preVisit")
+                .DataTable({
+                    "responsive": true,
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "bSearchable": true,
+                    "searching": true,
+                    "autoWidth": false,
+                    "sAjaxSource": "/Admin/VisitProfile/GetPreVisitNote?id="+@Model.PatientDto.Id ,
+                    "initComplete": function (settings, json) { },
+                    "rowCallback": function (row, data, index) { },
+
+                    "order": [[0, "desc"]],
+                    "language": {
+                        "info": "Showing _START_ to _END_ of _TOTAL_ Pre Visit Notes",
+                        "sInfoEmpty": "Showing 0 to 0 of 0  Pre Visit Notes "
+                    },
+                    "columns": [
+                        {
+                            "data": "date",
+                            "searchable": true,
+                            "orderable": true,
+                            "width": "19%",                       
+                          
+                        },
+                        {
+                            "data": "firstName",
+                            "width": "15%",
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "remark",
+                            "autoWidth": true,
+                            "searchable": true,
+                            "orderable": true
+                        },
+                        {
+                            "data": "id",
+                            "width": "100px",
+                            "searchable": false,
+                            "orderable": false,
+                            "render": function (data, type, row) {
+
+                                var element = `<button class="action-btn download" onclick="DownloadPrevisitNote('${row.id}')"><i class="far fa-arrow-alt-circle-down"></i></button> | <a onclick="OpenAddEditPreVisitNoteModel('${row.id}','{@Model.PatientDto.Id}');" class="action-btn edit editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="DeletePreVisitNote('${row.id}');" class="action-btn delete deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`;
+                                return element;
+                            }
+                        }
+                    ]
+                });
+        }
+        function ViewIme() {
+            if ($.fn.DataTable.isDataTable("#IMEtbl")) {
+                $("#IMEtbl").dataTable().fnDestroy();
+            }
+            $("#IMEtbl")
+            .DataTable({
+                "responsive": true,
+                "bProcessing": true,
+                "bServerSide": true,
+                "bSearchable": true,
+                "searching": true,
+
+                "autoWidth": false,
+                "sAjaxSource": "/Admin/VisitProfile/GetIme?id=" +@Model.PatientDto.Id,
+                "initComplete": function (settings, json) { },
+                "rowCallback": function (row, data, index) { },
+                "order": [[0, "desc"]],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ IME",
+                    "sInfoEmpty": "Showing 0 to 0 of 0  IMEs"
+                },
+                "columns": [
+                    {
+                        "data": "attorney",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "specialist",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "ekg",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "surgery",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "primaryCare",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+
+                            var element = `<a onclick="OpenAddEditOfIME('${row.id}','{@Model.PatientDto.Id}');" class="action-btn edit editAsset icon_cust_button" title="Edit"><i class="far fa-edit"></i></a> | <a onclick="DeleteIMEs('${row.id}');" class="action-btn delete deleteAsset icon_cust_button" title="Delete"><i class="far fa-trash-alt"></i></a>`;
+                            return element;
+                        }
+                    }
+                ]
+            });
+        }
+        function ViewLabReport() {
+            if ($.fn.DataTable.isDataTable("#PatientLabReporttbl")) {
+                $("#PatientLabReporttbl").dataTable().fnDestroy();
+            }
+            $("#PatientLabReporttbl")
+            .DataTable({
+                "responsive": true,
+                "bProcessing": true,
+                "bServerSide": true,
+                "bSearchable": true,
+                "searching": true,
+                "autoWidth": false,
+
+                "sAjaxSource": "/Admin/VisitProfile/GetLabReport?id=" +@Model.PatientDto.Id,
+                "initComplete": function (settings, json) { },
+                "rowCallback": function (row, data, index) { },
+                "order": [[0, "desc"]],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ Lab Report",
+                    "sInfoEmpty": "Showing 0 to 0 of 0  Lab Reports"
+                },
+                "columns": [
+                    {
+                        "data": "labReportName",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "date",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var dateformate = date.getDate();
+                            var month = date.getMonth() + 1;
+                            if (month <= 9) {
+                                month = '0' + month;
+                            }
+                            if (dateformate <= 9) {
+                                dateformate = '0' + dateformate; }
+                            date =  month + "-" + dateformate + "-" + date.getFullYear();
+                            return date ;
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            var element = `<button class="action-btn download" onclick="PrintToPdf('${row.id}')"><i class="far fa-arrow-alt-circle-down"></i></button>`;
+                            return element;
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var element = `
+                                            <button class="action-btn edit" onclick="OpenAddEditOfPatientLabReport('${row.id}','{@Model.PatientDto.Id}');"><i class="far fa-edit"></i></button> |
+                                            <button class="action-btn delete" onclick="DeleteLabReportOfPatient('${row.id}')"><i class="far fa-trash-alt"></i></button> `;
+                            return element;
+                        }
+                    }
+                ]
+            });
+        }
+        function GetPatientStatement() {
+
+            if ($.fn.DataTable.isDataTable("#StatementTBL")) {
+                $("#StatementTBL").dataTable().fnDestroy();
+            }
+            $("#StatementTBL")
+
+            .DataTable({
+                "responsive": true,
+                "bProcessing": true,
+                "bServerSide": true,
+                "bSearchable": true,
+                "searching": true,
+                "scrollX": false,
+                "autoWidth": false,
+                "sAjaxSource": "/Admin/VisitProfile/GetPatientStatement?id=" +@Model.PatientDto.Id,
+                "initComplete": function (settings, json) { },
+                "rowCallback": function (row, data, index) { },
+
+                "order": [[0, "desc"]],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ Statement",
+                    "sInfoEmpty": "Showing 0 to 0 of 0  Statement"
+                },
+                "columns": [
+                    {
+                        "data": "statement",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": null,
+                        "autoWidth": true,
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+
+                            var element = `<div class="incrementer">
+                            <span onclick="updateStatement((${data.repeatation} -1), '${data.statement}', '${data.id}', this)" class="qty-bttn-minus">-</span>
+                            <input type="text" name="" value='${data.repeatation}' class="qty" />
+                            <span onclick="updateStatement((${data.repeatation} + 1), '${data.statement}', '${data.id}', this)" class="qty-bttn-plus">+</span>
+                            </div>`;
+                            return element;
+                        }
+                    }
+                ]
+            });
+        }
+        function UpdatePatientMedicine(id) {
+            var date = $(`#${id}`).attr("data-id");
+            $.ajax({
+                url: "/Admin/VisitProfile/_AddOrUpdatePatientMedicine?Date="+ date +"&Id=" + id +"&PatientId="+ @Model.PatientDto.Id,
+                type: "GET",
+                success: function (response) {
+
+                    $('#divVisitContent').empty();
+                    $('#divVisitContent').html(response);                   
+                    $('#AddMedicalStateModal').modal('show');
+                    for (var i = 1; i <= textBoxCount; i++) {
+                        $(`#MedicineId${i}`).attr('disabled', true);
+                    }
+                    $('#MedicineDate').attr('disabled', true);      
+                    $("#ModalTitle").html("Edit Medicine");
+                }
+            });
+        }
+        function DeletePatientMedicine(id) {
+            var date = $(`#${id}`).attr("data-id");
+            $.ajax({
+                url: "/Admin/VisitProfile/DeletePatientMedicine",
+                type: "POST",
+                data: { Date: date, PatientId: @Model.PatientDto.Id},
+                success: function (response) {
+                    if (response) {
+                        toastr.success(
+                            '',
+                            'Medicine Deleted Successfully',
+                            {
+                               timeOut: 1000,
+                                fadeOut: 1000,
+                                onHidden: function () {
+                                    window.location.reload();
+                                }
+                            }
+                        );
+                    }
+
+                }
+            });
+        }
+        function updateStatement(count, statement, id, current) {
+            
+            if (count <= 0) {
+                jQuery("span.qty-bttn-minus").off("click");
+            }
+            else {
+                //var t = $(current).parent().find("input");
+                var obj = {
+                    Count: count,
+                    Id: id,
+                    PatientId: @Model.PatientDto.Id,
+                    Statement: statement
+                };
+                var Model = {
+                    PatientStatementTrendsDto: obj
+                };
+
+                $.ajax({
+                    url: "/Admin/VisitProfile/_AddOrEditPatientStatementTrends",
+                    type: "POST",
+                    data: { input: Model },
+                    success: function (response) {
+
+                        if (response.IsSuccess == true) {
+                            toastr.success(response.Message)
+                        }
+                        GetPatientStatement();
+                    },
+                    error: function (response){
+                        if (response.IsSuccess == false) {
+                            toastr.error(response.Message)
+                        }
+                    }
+                });
+            }
+        }
+        function UpdatePatientCheckupRecords(id)
+        {
+            var date = $(`#${"date" + id}`).attr("data-chekupDate");
+            $.ajax({
+                url: "/Admin/VisitProfile/_AddOrUpdatePatientCheckupRecord?Date="+ date +"&Id=" + id +"&PatientId="+@Model.PatientDto.Id,
+                type: "GET",
+                success: function (response) {
+
+                    $('#divVisitContent').empty();
+                    $('#divVisitContent').html(response);
+                    $('#AddCheckupRecordsModal').modal('show');
+
+                    for (var i = 1; i <= textBoxCount; i++) {
+                        $(`#LabReportId${i}`).attr('disabled', true);
+                    }
+                    $('#CheckupDate').attr('disabled', true);
+                    $("#ModalTitle").html("Edit Recoerd");
+                }
+            });
+        }
+        function DeletePatientCheckupRecords(id) {
+            swal({
+                title: "Are you sure to delete Recoerd?",
+                text: "",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    var date = $(`#${"date" + id}`).attr("data-chekupDate");
+                    $.ajax({
+                        url: "/Admin/VisitProfile/DeletePatientCheckupRecord",
+                        type: "POST",
+                        data: { Date: date, PatientId: @Model.PatientDto.Id},
+                        success: function (data) {
+                            if (data) {
+                                toastr.success(
+                                    '',
+                                    'Deleted Successfully',
+                                    {
+                                       timeOut: 1000,
+                                        fadeOut: 1000,
+                                        onHidden: function () {
+                                            window.location.reload();
+                                        }
+                                    }
+                                );
+                            }
+                         },
+                        error: function () {
+                            toastr.error("error");
+                            //$('#cancel-btn-medicine').click();
+                        }
+                    });
+                }
+            });
+        }
+
+        function ViewNotes() {
+            if ($.fn.DataTable.isDataTable("#PatientNotestbl")) {
+                $("#PatientNotestbl").dataTable().fnDestroy();
+            }
+            $("#PatientNotestbl")
+            .DataTable({
+                "responsive": true,
+                "bProcessing": true,
+                "bServerSide": true,
+                "bSearchable": true,
+                "searching": true,
+                "autoWidth": false,
+
+                "sAjaxSource": "/Admin/VisitProfile/GetNotes?id=" +@Model.PatientDto.Id,
+                "initComplete": function (settings, json) { },
+                "rowCallback": function (row, data, index) { },
+                "order": [[0, "desc"]],
+                "language": {
+                    "info": "Showing _START_ to _END_ of _TOTAL_ Notes",
+                    "sInfoEmpty": "Showing 0 to 0 of 0  Notes"
+                },
+                "columns": [
+                      {
+                        "data": "date",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            var date = new Date(data);
+                            var dateformate = date.getDate();
+                            var month = date.getMonth() + 1;
+                            if (month <= 9) {
+                                month = '0' + month;
+                            }
+                            if (dateformate <= 9) {
+                                dateformate = '0' + dateformate; }
+                            date =  month + "-" + dateformate + "-" + date.getFullYear();
+                            return date ;
+                        }
+                    },
+                    {
+                        "data": "remark",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true
+                    },                   
+                    {
+                        "data": "id",
+                        "autoWidth": true,
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function (data, type, row) {
+                            var element = `<button class="action-btn download" onclick="DownloadNote('${row.id}')"><i class="far fa-arrow-alt-circle-down"></i></button>`;
+                            return element;
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "width": "2%",
+                        "searchable": false,
+                        "orderable": false,
+                        "render": function (data, type, row) {
+                            var element = `
+                                            <button class="action-btn edit" onclick="OpenAddEditOfPatientNotes('${row.id}','{@Model.PatientDto.Id}');"><i class="far fa-edit"></i></button> |
+                                            <button class="action-btn delete" onclick="DeleteNotesOfPatient('${row.id}')"><i class="far fa-trash-alt"></i></button> `;
+                            return element;
+                        }
+                    }
+                ]
+            });
+        }
+    </script>
+}
+

@@ -1,0 +1,75 @@
+﻿@model Tangehrine.ServiceLayer.Dtos.Admin.PatientDetailMasterDto;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!-- Add Pre Visit Note Modal -->
+<form method="post" id="PreVisitNoteForm" asp-action="_AddOrEditPreVisitNote" asp-area="Admin" asp-controller="VisitProfile" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="modal fade" id="AddNewPreVisitNoteModal" tabindex="-1" aria-labelledby="AddNewRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+            <div class="modal-content add-body">
+                <div class="modal-body"> 
+                    <h3 id="ModalTitle">Add Pre-Visit Notes</h3>        
+                    <div class="row">
+                        <input asp-for="AddEditPreVisitNoteDto.PatientId" type="hidden" />
+                        <input asp-for="AddEditPreVisitNoteDto.Id" type="hidden" />
+                        <div class="col-12">
+                            <input type="text" name="fake[email]" style="height:1px;width:1px;overflow:hidden;clip:rect(1px, 1px, 1px, 1px);border:0;outline:none;padding:0;margin:0;color:transparent;" tab-index="-1" aria-hidden="true" value=".">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AddEditPreVisitNoteDto.Date" class="form-label required">Date </label>
+                            <input type="text" asp-for="AddEditPreVisitNoteDto.Date"  class="form-control date" id="previsitDate" placeholder="Date" />
+                            <span asp-validation-for="AddEditPreVisitNoteDto.Date" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AddEditPreVisitNoteDto.Time" class="form-label required">Time </label>
+                            <input type="text" asp-for="AddEditPreVisitNoteDto.Time" class="form-control time" id="" placeholder="Time" />
+                            <span asp-validation-for="AddEditPreVisitNoteDto.Time" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label name="AddEditPreVisitNoteDto.Doctor" class="form-label required">Doctor </label>
+
+                            <select asp-for="AddEditPreVisitNoteDto.Doctor" class="form-select" aria-label="Default select example">
+                                <option value="" selected>Select Doctors</option>
+                                @foreach (var item in Model.Doctors)
+                                {
+                                    <option value="@item.Id">@item.FullName</option>
+                                }
+                            </select>
+                          
+                            <span asp-validation-for="AddEditPreVisitNoteDto.Doctor" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label asp-for="AddEditPreVisitNoteDto.Remark" class="form-label">Remark </label>
+                            <textarea class="form-control" asp-for="AddEditPreVisitNoteDto.Remark"  placeholder="Type Something..."></textarea>
+                            <span asp-validation-for="AddEditPreVisitNoteDto.Remark" class="text-danger"></span>
+                        </div>
+                        <div class="col-12 mb-3">
+                           <label for="PdfFile" class="form-label">Attachment</label>
+                           <input asp-for="AddEditPreVisitNoteDto.File" id="reportFile" type="file" placeholder="Report Upload" accept="application/pdf, image/*" />
+                            <div class="my-dropzone dropzone">
+                                <div class="dz-message">
+                                    <img id="imgoutput" src="~/assets/images/file-attachment.png" alt="file-attachment" style="pointer-events: none;" />
+                                </div>
+                            </div>
+                            <span asp-validation-for="AddEditPreVisitNoteDto.File" class="text-danger"></span>                     
+                        </div>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary" value="Save" />
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Pre Visit Note Modal -->
+</form>
+<partial name="_ValidationScriptsPartial" />
+
+<script>
+    $(document).ready(function () {
+        $('#previsitDate').datepicker({ format: 'mm-dd-yyyy' });
+        $('.time').timepicker({ format: 'hh:mm tt' });   
+    });
+     $("PreVisitNoteForm").on("submit", (event) => { event.preventDefault(); });
+</script>
+

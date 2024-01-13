@@ -1,0 +1,36 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Welcome Back!";
+    Layout = "~/Views/Shared/_LayoutBeforeLogin.cshtml";
+}
+<div class="login-main">
+    <div class="container">
+        <div class="login-block">
+            <div class="left">
+                <div class="logo"><img src="~/assets/images/logo.png" alt="Logo" /></div>
+                <div class="login-img"><img src="~/assets/images/login-inner.png" class="login-inner" /></div>
+            </div>
+            <div class="right">
+            @{ 
+                 @if(TempData["Home"]=="")
+                 {
+                   @TempData["Request"]<br /><br />
+                 }
+                 else
+                 {
+                   @TempData["Home"]<br /><br />
+                 }
+             }
+             Regards,<br />
+             Team Tangherine
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+}
